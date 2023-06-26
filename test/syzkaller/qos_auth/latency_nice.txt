@@ -1,0 +1,77 @@
+include <linux/socket.h>
+include <linux/ptrace.h>
+include <linux/resource.h>
+include <linux/stat.h>
+include <linux/mman.h>
+include <linux/time.h>
+include <linux/mount.h>
+include <linux/fs.h>
+include <linux/eventpoll.h>
+include <linux/signalfd.h>
+include <linux/eventfd.h>
+include <linux/timerfd.h>
+include <linux/personality.h>
+include <linux/wait.h>
+include <linux/user.h>
+include <linux/un.h>
+include <linux/ioctl.h>
+include <linux/fadvise.h>
+include <linux/falloc.h>
+include <linux/kexec.h>
+include <linux/elf.h>
+include <linux/fiemap.h>
+include <linux/kd.h>
+include <linux/vt.h>
+include <linux/if_alg.h>
+include <linux/nfc.h>
+include <linux/sockios.h>
+include <linux/net_tstamp.h>
+include <linux/termios.h>
+include <linux/fcntl.h>
+include <linux/sched.h>
+include <linux/mqueue.h>
+include <linux/mempolicy.h>
+include <linux/in.h>
+include <linux/ip.h>
+include <linux/tcp.h>
+include <linux/udp.h>
+include <linux/kcmp.h>
+include <linux/nfs.h>
+include <linux/syslog.h>
+include <linux/exportfs.h>
+include <linux/splice.h>
+include <fs/overlayfs/overlayfs.h>
+include <uapi/linux/memfd.h>
+include <uapi/linux/module.h>
+include <linux/ioprio.h>
+include <linux/membarrier.h>
+include <uapi/linux/kcov.h>
+include <uapi/linux/membarrier.h>
+include <uapi/linux/capability.h>
+include <uapi/linux/seccomp.h>
+include <uapi/linux/watch_queue.h>
+include <kernel/sched/sched.h>
+include <uapi/linux/close_range.h>
+include <uapi/linux/netfilter/xt_cgroup.h>
+include <xen/interface/io/xs_wire.h>
+include <uapi/linux/prctl.h>
+include <asm/prctl.h>
+
+sched_setattr(pid pid, attr ptr[in, sched_attr], flags const[0])
+
+sched_attr {
+	size		bytesize[parent, int32]
+	sched_policy	flags[sched_policy, int32]
+	sched_flags	flags[sched_attr_flags, int64]
+	sched_nice	int32
+	sched_priority	int32
+	sched_runtime	int64
+	sched_deadline	int64
+	sched_period	int64
+	sched_util_min	int32
+	sched_util_max	int32
+	sched_latency_nice int32
+}
+
+sched_policy = SCHED_NORMAL, SCHED_FIFO, SCHED_RR, SCHED_BATCH, SCHED_IDLE, SCHED_DEADLINE
+sched_attr_flags = SCHED_FLAG_RESET_ON_FORK, SCHED_FLAG_RECLAIM, SCHED_FLAG_DL_OVERRUN, SCHED_FLAG_KEEP_POLICY, SCHED_FLAG_KEEP_PARAMS, SCHED_FLAG_UTIL_CLAMP_MIN, SCHED_FLAG_UTIL_CLAMP_MAX, SCHED_FLAG_SUGOV, SCHED_FLAG_LATENCY_NICE

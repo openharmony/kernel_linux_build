@@ -1,0 +1,8 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_cpu_high[fd]
+openat$fd_cpu_high(fd const[AT_FDCWD], file ptr[in, string["/proc/sys/kernel/sched_cpu_high_irqload"]], flags const[O_RDWR], mode const[0]) fd_cpu_high
+
+write$HIGH_INT(fd fd_cpu_high, data ptr[in, int32], len bytesize[data])

@@ -1,0 +1,8 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_store_global[fd]
+openat$fd_store_global(fd const[AT_FDCWD], file ptr[in, string["/sys/devices/system/cpu/cpu0/core_ctl/global_state"]], flags const[O_RDWR], mode const[0]) fd_store_global
+
+write$GLOBAL_INT(fd fd_store_global, data ptr[in, int32], len bytesize[data])

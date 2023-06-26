@@ -1,0 +1,8 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_walt_task[fd]
+openat$fd_walt_task(fd const[AT_FDCWD], file ptr[in, string["/proc/sys/kernel/sched_use_walt_task_util"]], flags const[O_RDWR], mode const[0]) fd_walt_task
+
+write$TASK_INT(fd fd_walt_task, data ptr[in, int32], len bytesize[data])

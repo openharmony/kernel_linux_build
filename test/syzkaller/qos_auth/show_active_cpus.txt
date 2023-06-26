@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_show_activecpus[fd]
+
+openat$fd_show_activecpus(fd const[AT_FDCWD], file ptr[in, string["/sys/devices/system/cpu/cpu0/core_ctl/active_cpus"]], flags const[O_RDWR], mode const[0]) fd_show_activecpus
+
+type read_activecpus array[int8, 1024]
+read$ACTIVECPUS(fd fd_show_activecpus, buf ptr[out, read_activecpus], len bytesize[buf])

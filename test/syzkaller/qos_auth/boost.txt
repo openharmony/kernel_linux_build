@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_boost[fd]
+
+openat$fd_boost(fd const[AT_FDCWD], file ptr[in, string["/dev/cpu_ctl/boost/uclamp.colocate"]], flags const[O_RDWR], mode const[0]) fd_boost
+
+type read_boost array[int8, 1024]
+read$BOOST(fd fd_boost, buf ptr[out, read_boost], len bytesize[buf])
+
+write$BOOST_INT(fd fd_boost, data ptr[in, int32], len bytesize[data])

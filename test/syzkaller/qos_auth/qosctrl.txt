@@ -1,0 +1,18 @@
+include <asm/ioctl.h>
+include <linux/fcntl.h>
+include <linux/types.h>
+include <include/linux/sched/qos_ctrl.h>
+
+resource fd_qos_ctrl[fd]
+
+openat$fd_qos_ctrl(fd const[AT_FDCWD], file ptr[in, string["/proc/thread-self/sched_qos_ctrl"]], flags const[O_RDWR], mode const[0]) fd_qos_ctrl
+close$fd_qos_ctrl(fd fd_qos_ctrl)
+
+ioctl$QOS_CTRL_BASIC_OPERATION(fd fd_qos_ctrl, cmd const[QOS_CTRL_BASIC_OPERATION], arg ptr[inout, qos_ctrl_data])
+ioctl$QOS_CTRL_POLICY_OPERATION(fd fd_qos_ctrl, cmd const[QOS_CTRL_POLICY_OPERATION], arg ptr[inout, qos_ctrl_data])
+
+qos_ctrl_data {
+	pid int32
+	type int32
+	level int32
+}

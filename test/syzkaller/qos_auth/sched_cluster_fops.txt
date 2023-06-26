@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_sched_cluster[fd]
+
+openat$fd_sched_cluster(fd const[AT_FDCWD], file ptr[in, string["/proc/sched_cluster"]], flags const[O_RDWR], mode const[0]) fd_sched_cluster
+
+type read_sched_cluster array[int8, 1024]
+read$SCHED_CLUSTER(fd fd_sched_cluster, buf ptr[out, read_sched_cluster], len bytesize[buf])
