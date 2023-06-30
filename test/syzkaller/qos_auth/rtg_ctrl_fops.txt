@@ -1,0 +1,43 @@
+include <asm/ioctl.h>
+include <linux/fcntl.h>
+include <linux/types.h>
+include <include/linux/sched/rtg_ctrl.h>
+
+resource fd_rtg_ctrl_fops[fd]
+
+openat$fd_rtg_ctrl_fops(fd const[AT_FDCWD],file ptr[in,string["/dev/sched_rtg_ctrl"]],flags const[O_RDWR],mode const[0]) fd_rtg_ctrl_fops
+close$fd_rtg_ctrl_fops(fd fd_rtg_ctrl_fops)
+
+ioctl$CMD_ID_SET_ENABLE_FOPS(fd fd_rtg_ctrl_fops,cmd const[CMD_ID_SET_ENABLE],arg ptr[inout,rtg_enable_data_fops])
+ioctl$CMD_ID_SET_RTG_FOPS(fd fd_rtg_ctrl_fops,cmd const[CMD_ID_SET_RTG],arg ptr[inout,rtg_grp_data_fops])
+ioctl$CMD_ID_SET_CONFIG_FOPS(fd fd_rtg_ctrl_fops,cmd const[CMD_ID_SET_CONFIG],arg ptr[inout,rtg_str_data_fops])
+ioctl$CMD_ID_SET_RTG_ATTR_FOPS(fd fd_rtg_ctrl_fops,cmd const[CMD_ID_SET_RTG_ATTR],arg ptr[inout,rtg_str_data_fops])
+ioctl$CMD_ID_BEGIN_FRAME_FREQ_FOPS(fd fd_rtg_ctrl_fops,cmd const[CMD_ID_BEGIN_FRAME_FREQ],arg ptr[inout,proc_state_data_fops])
+ioctl$CMD_ID_END_FRAME_FREQ_FOPS(fd fd_rtg_ctrl_fops,cmd const[CMD_ID_END_FRAME_FREQ],arg ptr[inout,proc_state_data_fops])
+ioctl$CMD_ID_END_SCENE_FOPS(fd fd_rtg_ctrl_fops,cmd const[CMD_ID_END_SCENE],arg ptr[inout,proc_state_data_fops])
+
+rtg_enable_data_fops {
+    enable int32
+    len int32
+    data ptr[inout, int8]
+}
+
+rtg_grp_data_fops {
+    rtg_cmd int32
+    grp_id int32
+    prio_type int32
+    rt_cnt int32
+    tid_num int32
+    tids array[int32, 5]
+}
+
+rtg_str_data_fops {
+    type int32
+    len int32
+    data ptr[inout, int8]
+}
+
+proc_state_data_fops {
+    grp_id int32
+    state_param int32
+}

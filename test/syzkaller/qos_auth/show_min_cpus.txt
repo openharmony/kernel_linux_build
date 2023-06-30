@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_show_mincpus[fd]
+
+openat$fd_show_mincpus(fd const[AT_FDCWD], file ptr[in, string["/sys/devices/system/cpu/cpu0/core_ctl/min_cpus"]], flags const[O_RDWR], mode const[0]) fd_show_mincpus
+
+type read_mincpus array[int8, 1024]
+read$MINCPUS(fd fd_show_mincpus, buf ptr[out, read_mincpus], len bytesize[buf])

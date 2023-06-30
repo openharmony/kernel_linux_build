@@ -1,0 +1,9 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+
+resource fd_active[fd]
+openat$fd_active(fd const[AT_FDCWD], file ptr[in, string["/sys/devices/system/cpu/cpu0/core_ctl/active_cpus"]], flags const[O_RDWR], mode const[0]) fd_active
+
+write$ACTIVE_INT(fd fd_active, data ptr[in, int32], len bytesize[data])

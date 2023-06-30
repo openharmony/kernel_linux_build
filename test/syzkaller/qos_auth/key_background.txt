@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_key_background[fd]
+
+openat$fd_key_background(fd const[AT_FDCWD], file ptr[in, string["/dev/cpu_ctl/key_background/uclamp.colocate"]], flags const[O_RDWR], mode const[0]) fd_key_background
+
+type read_key_background array[int8, 1024]
+read$KEY_BACKGROUND(fd fd_key_background, buf ptr[out, read_key_background], len bytesize[buf])
+
+write$KEY_BACKGROUND(fd fd_key_background, data ptr[in, int32], len bytesize[data])

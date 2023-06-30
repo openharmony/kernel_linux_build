@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_show_enable[fd]
+
+openat$fd_show_enable(fd const[AT_FDCWD], file ptr[in, string["/sys/devices/system/cpu/cpu0/core_ctl/enable"]], flags const[O_RDWR], mode const[0]) fd_show_enable
+
+type read_enable array[int8, 1024]
+read$ENABLE(fd fd_show_enable, buf ptr[out, read_enable], len bytesize[buf])

@@ -1,0 +1,19 @@
+include <asm/ioctl.h>
+include <linux/fcntl.h>
+include <linux/types.h>
+include <include/linux/sched/auth_ctrl.h>
+
+resource fd_auth_ctrl[fd]
+
+openat$fd_auth_ctrl(fd const[AT_FDCWD], file ptr[in, string["/dev/auth_ctrl"]], flags const[O_RDWR], mode const[0]) fd_auth_ctrl                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+close$fd_auth_ctrl(fd fd_auth_ctrl)
+
+ioctl$CTRL_AUTH_BASIC_OPERATION(fd fd_auth_ctrl, cmd const[BASIC_AUTH_CTRL_OPERATION], arg ptr[inout, auth_ctrl_data])
+
+auth_ctrl_data {
+	uid int32
+	type int32
+	rtg_ua_flag int32
+	qos_ua_flag int32
+	status int32 
+}

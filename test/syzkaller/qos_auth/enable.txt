@@ -1,0 +1,8 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_enable[fd]
+openat$fd_enable(fd const[AT_FDCWD], file ptr[in, string["/sys/devices/system/cpu/cpu0/core_ctl/enable"]], flags const[O_RDWR], mode const[0]) fd_enable
+
+write$ENABLE_INT(fd fd_enable, data ptr[in, int32], len bytesize[data])

@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_sched_rtg_debug[fd]
+
+openat$fd_sched_rtg_debug(fd const[AT_FDCWD], file ptr[in, string["/proc/sched_rtg_debug"]], flags const[O_RDWR], mode const[0]) fd_sched_rtg_debug
+
+type read_sched_rtg_debug array[int8, 1024]
+read$SCHEDRTG(fd fd_sched_rtg_debug, buf ptr[out, read_sched_rtg_debug], len bytesize[buf])

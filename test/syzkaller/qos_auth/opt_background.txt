@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_opt_background[fd]
+
+openat$fd_opt_background(fd const[AT_FDCWD], file ptr[in, string["/dev/cpu_ctl/opt_background/uclamp.colocate"]], flags const[O_RDWR], mode const[0]) fd_opt_background
+
+type read_opt_background array[int8, 1024]
+read$OPT_BACKGROUND(fd fd_opt_background, buf ptr[out, read_opt_background], len bytesize[buf])
+
+write$OPT_BACKGROUND_INT(fd fd_opt_background, data ptr[in, int32], len bytesize[data])

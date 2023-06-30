@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+
+resource fd_foreground[fd]
+
+openat$fd_foreground(fd const[AT_FDCWD], file ptr[in, string["/dev/cpu_ctl/foreground/uclamp.colocate"]], flags const[O_RDWR], mode const[0]) fd_foreground
+
+type read_foreground array[int8, 1024]
+read$FOREGROUND(fd fd_foreground, buf ptr[out, read_foreground ], len bytesize[buf])
+
+write$FOREGROUND_INT(fd fd_foreground, data ptr[in, int32], len bytesize[data])
