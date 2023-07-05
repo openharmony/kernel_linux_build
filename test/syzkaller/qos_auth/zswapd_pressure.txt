@@ -1,0 +1,9 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_zswapd_pressure[fd]
+openat$fd_zswapd_pressure(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.zswapd_pressure"]], flags const[O_RDWR], mode const[0]) fd_zswapd_pressure
+
+write$ZSWAPD_PRESSURE(fd fd_zswapd_pressure, data ptr[in, int32], len bytesize[data])

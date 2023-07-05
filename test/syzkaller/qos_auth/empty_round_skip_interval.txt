@@ -1,0 +1,14 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_empty_round_skip_interval[fd]
+openat$fd_empty_round_skip_interval(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.empty_round_skip_interval"]], flags const[O_RDWR], mode const[0]) fd_empty_round_skip_interval
+
+write$EMPTY_ROUNDSKIPINTERVAL(fd fd_empty_round_skip_interval, data ptr[in, int32], len bytesize[data])
+
+#ifdef CONFIG_HYPERHOLD_DEBUG
+type read_empty_round_skip_interval array[int8, 1024]
+read$EMPTY_ROUNDSKIPINTERVAL(fd fd_empty_round_skip_interval, buf ptr[out, read_empty_round_skip_interval], len bytesize[buf])
+#endif

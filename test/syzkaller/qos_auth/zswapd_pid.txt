@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_zswapd_pid[fd]
+openat$fd_zswapd_pid(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.zswapd_pid"]], flags const[O_RDWR], mode const[0]) fd_zswapd_pid
+
+type read_fd_zswapd_pid array[int8, 1024]
+read$ZSWAPD_PID(fd fd_zswapd_pid, buf ptr[out, read_fd_zswapd_pid], len bytesize[buf])

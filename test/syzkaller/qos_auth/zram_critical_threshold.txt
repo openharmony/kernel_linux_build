@@ -1,0 +1,14 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_zram_critical_threshold[fd]
+openat$fd_zram_critical_threshold(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.zram_critical_threshold"]], flags const[O_RDWR], mode const[0]) fd_zram_critical_threshold
+
+write$ZRAM_CRITICALTHRESHOLD(fd fd_zram_critical_threshold, data ptr[in, int32], len bytesize[data])
+
+#ifdef CONFIG_HYPERHOLD_DEBUG
+type read_zram_critical_threshold array[int8, 1024]
+read$ZRAM_CRITICALTHRESHOLD(fd fd_zram_critical_threshold, buf ptr[out, read_zram_critical_threshold], len bytesize[buf])
+#endif

@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_kmemtcpfailcnt[fd]
+openat$fd_kmemtcpfailcnt(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.kmem.tcp.failcnt"]], flags const[O_RDWR], mode const[0]) fd_kmemtcpfailcnt
+
+write$kmemtcpfailcnt(fd fd_kmemtcpfailcnt, data ptr[in, int32], len bytesize[data])
+
+type read_kmemtcpfailcnt array[int8, 1024]
+read$kmemtcpfailcnt(fd fd_kmemtcpfailcnt, buf ptr[out, read_kmemtcpfailcnt], len bytesize[buf])

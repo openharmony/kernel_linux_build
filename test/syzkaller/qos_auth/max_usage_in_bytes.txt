@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_max_usage_in_bytes[fd]
+openat$fd_max_usage_in_bytes(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.max_usage_in_bytes"]], flags const[O_RDWR], mode const[0]) fd_max_usage_in_bytes
+
+write$max_usage_in_bytes(fd fd_max_usage_in_bytes, data ptr[in, int32], len bytesize[data])
+
+type read_max_usage_in_bytes array[int8, 1024]
+read$max_usage_in_bytes(fd fd_max_usage_in_bytes, buf ptr[out, read_max_usage_in_bytes], len bytesize[buf])

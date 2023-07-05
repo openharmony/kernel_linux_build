@@ -1,0 +1,14 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_anon_refault_snapshot_min_interval[fd]
+openat$fd_anon_refault_snapshot_min_interval(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.anon_refault_snapshot_min_interval"]], flags const[O_RDWR], mode const[0]) fd_anon_refault_snapshot_min_interval
+
+write$ANON_REFAULTSNAPSHOTMININTERVAL(fd fd_anon_refault_snapshot_min_interval, data ptr[in, int32], len bytesize[data])
+
+#ifdef CONFIG_HYPERHOLD_DEBUG
+type read_anon_refault_snapshot_min_interval array[int8, 1024]
+read$ANON_REFAULTSNAPSHOTMININTERVAL(fd fd_anon_refault_snapshot_min_interval, buf ptr[out, read_anon_refault_snapshot_min_interval], len bytesize[buf])
+#endif

@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_kmemtcpusage_in_bytes[fd]
+openat$fd_kmemtcpusage_in_bytes(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.kmem.tcp.usage_in_bytes"]], flags const[O_RDWR], mode const[0]) fd_kmemtcpusage_in_bytes
+
+type read_kmemtcpusage_in_bytes array[int8, 1024]
+read$kmemtcpusage_in_bytes(fd fd_kmemtcpusage_in_bytes, buf ptr[out, read_kmemtcpusage_in_bytes], len bytesize[buf])

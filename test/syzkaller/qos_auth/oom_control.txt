@@ -1,0 +1,9 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_oom_control[fd]
+openat$fd_oom_control(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.oom_control"]], flags const[O_RDWR], mode const[0]) fd_oom_control
+
+write$oom_control(fd fd_oom_control, data ptr[in, int32], len bytesize[data])

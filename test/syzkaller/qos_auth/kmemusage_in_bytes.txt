@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_kmemusage_in_bytes[fd]
+openat$fd_kmemusage_in_bytes(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.kmem.usage_in_bytes"]], flags const[O_RDWR], mode const[0]) fd_kmemusage_in_bytes
+
+type read_kmemusage_in_bytes array[int8, 1024]
+read$kmemusage_in_bytes(fd fd_kmemusage_in_bytes, buf ptr[out, read_kmemusage_in_bytes], len bytesize[buf])

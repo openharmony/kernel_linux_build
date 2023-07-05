@@ -1,0 +1,14 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_area_anon_refault_threshold[fd]
+openat$fd_area_anon_refault_threshold(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.area_anon_refault_threshold"]], flags const[O_RDWR], mode const[0]) fd_area_anon_refault_threshold
+
+write$AREA_ANONREFAULTTHRESHOLD(fd fd_area_anon_refault_threshold, data ptr[in, int32], len bytesize[data])
+
+#ifdef CONFIG_HYPERHOLD_DEBUG
+type read_area_anon_refault_threshold array[int8, 1024]
+read$AREA_ANONREFAULTTHRESHOLD(fd fd_area_anon_refault_threshold, buf ptr[out, read_area_anon_refault_threshold], len bytesize[buf])
+#endif
