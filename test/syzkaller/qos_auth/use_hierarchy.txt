@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_use_hierarchy[fd]
+openat$fd_use_hierarchy(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.use_hierarchy"]], flags const[O_RDWR], mode const[0]) fd_use_hierarchy
+
+write$use_hierarchy(fd fd_use_hierarchy, data ptr[in, int32], len bytesize[data])
+
+type read_use_hierarchy array[int8, 1024]
+read$use_hierarchy(fd fd_use_hierarchy, buf ptr[out, read_use_hierarchy], len bytesize[buf])

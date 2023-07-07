@@ -1,0 +1,9 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_zswapd_single_memcg_param[fd]
+openat$fd_zswapd_single_memcg_param(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.zswapd_single_memcg_param"]], flags const[O_RDWR], mode const[0]) fd_zswapd_single_memcg_param
+
+write$ZSWAPD_SINGLEMEMCGPARAM(fd fd_zswapd_single_memcg_param, data ptr[in, int32], len bytesize[data])

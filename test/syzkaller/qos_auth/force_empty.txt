@@ -1,0 +1,9 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_force_empty[fd]
+openat$fd_force_empty(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.force_empty"]], flags const[O_RDWR], mode const[0]) fd_force_empty
+
+write$force_empty(fd fd_force_empty, data ptr[in, int32], len bytesize[data])

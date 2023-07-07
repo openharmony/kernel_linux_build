@@ -1,0 +1,9 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_buffer_ratio_params[fd]
+openat$fd_buffer_ratio_params(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.buffer_ratio_params"]], flags const[O_RDWR], mode const[0]) fd_buffer_ratio_params
+
+write$BUFFER_RATIOPARAMS(fd fd_buffer_ratio_params, data ptr[in, int32], len bytesize[data])

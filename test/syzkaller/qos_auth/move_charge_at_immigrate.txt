@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_move_charge_at_immigrate[fd]
+openat$fd_move_charge_at_immigrate(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.move_charge_at_immigrate"]], flags const[O_RDWR], mode const[0]) fd_move_charge_at_immigrate
+
+write$move_charge_at_immigrate(fd fd_move_charge_at_immigrate, data ptr[in, int32], len bytesize[data])
+
+type read_move_charge_at_immigrate array[int8, 1024]
+read$move_charge_at_immigrate(fd fd_move_charge_at_immigrate, buf ptr[out, read_move_charge_at_immigrate], len bytesize[buf])

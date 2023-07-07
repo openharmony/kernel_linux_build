@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_kmemmax_usage_in_bytes[fd]
+openat$fd_kmemmax_usage_in_bytes(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.kmem.max_usage_in_bytes"]], flags const[O_RDWR], mode const[0]) fd_kmemmax_usage_in_bytes
+
+write$kmemmax_usage_in_bytes(fd fd_kmemmax_usage_in_bytes, data ptr[in, int32], len bytesize[data])
+
+type read_kmemmax_usage_in_bytes array[int8, 1024]
+read$kmemmax_usage_in_bytes(fd fd_kmemmax_usage_in_bytes, buf ptr[out, read_kmemmax_usage_in_bytes], len bytesize[buf])

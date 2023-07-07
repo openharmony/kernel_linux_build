@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_kmemlimit_in_bytes[fd]
+openat$fd_kmemlimit_in_bytes(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.kmem.limit_in_bytes"]], flags const[O_RDWR], mode const[0]) fd_kmemlimit_in_bytes
+
+write$kmemlimit_in_bytes(fd fd_kmemlimit_in_bytes, data ptr[in, int32], len bytesize[data])
+
+type read_kmemlimit_in_bytes array[int8, 1024]
+read$kmemlimit_in_bytes(fd fd_kmemlimit_in_bytes, buf ptr[out, read_kmemlimit_in_bytes], len bytesize[buf])

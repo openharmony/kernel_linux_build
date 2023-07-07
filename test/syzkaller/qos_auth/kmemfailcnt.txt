@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_kmemfailcnt[fd]
+openat$fd_kmemfailcnt(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.kmem.failcnt"]], flags const[O_RDWR], mode const[0]) fd_kmemfailcnt
+
+write$kmemfailcnt(fd fd_kmemfailcnt, data ptr[in, int32], len bytesize[data])
+
+type read_kmemfailcnt array[int8, 1024]
+read$kmemfailcnt(fd fd_kmemfailcnt, buf ptr[out, read_kmemfailcnt], len bytesize[buf])

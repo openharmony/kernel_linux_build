@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_failcnt[fd]
+openat$fd_failcnt(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.failcnt"]], flags const[O_RDWR], mode const[0]) fd_failcnt
+
+write$failcnt(fd fd_failcnt, data ptr[in, int32], len bytesize[data])
+
+type read_failcnt array[int8, 1024]
+read$failcnt(fd fd_failcnt, buf ptr[out, read_failcnt], len bytesize[buf])

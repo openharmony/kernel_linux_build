@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fuse.h>
+include <uapi/linux/fcntl.h>
+include <include/linux/kernfs.h>
+
+resource fd_swappiness[fd]
+openat$fd_swappiness(fd const[AT_FDCWD], file ptr[in, string["/dev/memcg/memory.swappiness"]], flags const[O_RDWR], mode const[0]) fd_swappiness
+
+write$swappiness(fd fd_swappiness, data ptr[in, int32], len bytesize[data])
+
+type read_swappiness array[int8, 1024]
+read$swappiness(fd fd_swappiness, buf ptr[out, read_swappiness], len bytesize[buf])
