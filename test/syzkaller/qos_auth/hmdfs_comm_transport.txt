@@ -1,0 +1,12 @@
+include <linux/stat.h>
+include <uapi/linux/fcntl.h>
+include <uapi/linux/fuse.h>
+include <fs/hmdfs/hmdfs.h>
+include <asm/ioctls.h>
+
+resource fd_sys_fs_hmdfs_cmd2[fd]
+
+openat$fd_sys_fs_hmdfs_cmd2(fd const[AT_FDCWD], file ptr[in, string["/sys/fs/hmdfs/13272509345601772847/cmd"]], flags const[O_RDWR], mode const[0]) fd_sys_fs_hmdfs_cmd2
+
+write$CMD_UPDATE_SOCKET_T(fd fd_sys_fs_hmdfs_cmd2, buf ptr[in, string["0"]], len bytesize[buf])
+lseek$10(fd fd_sys_fs_hmdfs_cmd, offset const[0x0], whence const[0x0])

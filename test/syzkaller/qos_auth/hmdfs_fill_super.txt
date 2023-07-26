@@ -1,0 +1,40 @@
+include <linux/stat.h>
+include <uapi/linux/fcntl.h>
+include <uapi/linux/fuse.h>
+include <fs/hmdfs/hmdfs.h>
+
+mount$hmdfs_fill_super(src const[0], dst ptr[in, filename], type ptr[in, string["hmdfs"]], flags flags[mount_flags])
+
+update_socket_param {
+    cmd      int32
+    newfd    int32
+    devsl    int32
+    status   int8
+    masterkey  array[int8, 32]
+    cid    array[int8, 64]
+}
+
+update_devsl_param {
+    cmd      int32
+    newfd    int32
+    cid    array[int8, 64]
+}
+
+offline_param {
+    cmd      int32
+    remote_cid    array[int8, 64]
+}
+
+offline_all_param {
+    cmd      int32
+}
+
+hmdfs_opts [
+	max_read		fs_opt_hex["max_read", int32]
+	allow_other		stringnoz["allow_other"]
+	default_permissions	stringnoz["default_permissions"]
+	blksize			fs_opt_hex["blksize", flags[hmdfs_block_sizes]]
+] [varlen]
+
+hmdfs_mode = S_IFREG, S_IFCHR, S_IFBLK, S_IFIFO, S_IFSOCK, S_IFLNK, S_IFDIR
+hmdfs_block_sizes = 512, 1024, 2048, 4096
