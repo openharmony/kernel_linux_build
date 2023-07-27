@@ -1,0 +1,10 @@
+include <linux/stat.h>
+include <uapi/linux/fcntl.h>
+include <uapi/linux/fuse.h>
+include <fs/hmdfs/hmdfs.h>
+include <asm/ioctls.h>
+
+resource fd_hmdfs_ioc_set_share_path[fd]
+
+openat$fd_hmdfs_ioc_set_share_path(fd const[AT_FDCWD], file ptr[in, string["/mnt/hmdfs/100/account/device_view/local/"]], flags const[O_RDWR], mode const[0]) fd_hmdfs_ioc_set_share_path
+ioctl$HMDFS_IOC_SET_SHARE_PATH(fd fd_hmdfs_ioc_set_share_path, cmd const[HMDFS_IOC_SET_SHARE_PATH], arg ptr[in, fd_hmdfs_ioc_set_share_path])
