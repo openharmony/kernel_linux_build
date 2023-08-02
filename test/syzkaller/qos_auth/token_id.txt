@@ -1,0 +1,25 @@
+#drivers/accesstokenid/access_tokenid.c
+
+#static const struct file_operations access_tokenid_fops = {
+#    .owner = THIS_MODULE,
+#    .unlocked_ioctl = access_tokenid_ioctl,
+#    .compat_ioctl = access_tokenid_ioctl,
+#};
+
+include <asm/ioctl.h>
+include <linux/fcntl.h>
+include <linux/types.h>
+include <drivers/accesstokenid/access_tokenid.h>
+
+resource fd_access_token[fd]
+
+openat$fd_access_token(fd const[AT_FDCWD], file ptr[in, string["/dev/access_token_id"]], flags const[O_RDWR], mode const[0]) fd_access_token
+close$fd_access_token(fd fd_access_token)
+
+ioctl$ACCESS_TOKENID_GET_TOKENID(fd fd_access_token, cmd const[ACCESS_TOKENID_GET_TOKENID], arg ptr[out, int64])
+
+ioctl$ACCESS_TOKENID_SET_TOKENID(fd fd_access_token, cmd const[ACCESS_TOKENID_SET_TOKENID], arg ptr[in, int64])
+
+ioctl$ACCESS_TOKENID_GET_FTOKENID(fd fd_access_token, cmd const[ACCESS_TOKENID_GET_FTOKENID], arg ptr[out, int64])
+
+ioctl$ACCESS_TOKENID_SET_FTOKENID(fd fd_access_token, cmd const[ACCESS_TOKENID_SET_FTOKENID], arg ptr[in, int64])
