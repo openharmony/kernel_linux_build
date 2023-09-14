@@ -30,14 +30,14 @@ kernel/linux/patches
 ├── linux-4.19				# linux-4.19 patches
 │   ├── common_patch
 │   │		└── hdf.patch		# linux-4.19 HDF patches
-│   └── hi3516dv300_patch
-│   		└── hi3516dv300.patch	# linux-4.19 Hi3516D V300 SOC patches
+│   └── hispark_taurus_patch
+│   		└── hispark_taurus.patch	# linux-4.19 Hi3516D V300 SOC patches
 └── linux-5.10
     ├── common_patch
     │		└── hdf.patch		# linux-5.10 HDF patches
-    └── hi3516dv300_patch
-    │		└── hi3516dv300.patch	# linux-5.10 Hi3516D V300 SOC patches
-    └── rkrk3568_patch
+    └── hispark_taurus_patch
+    │		└── hispark_taurus.patch	# linux-5.10 Hi3516D V300 SOC patches
+    └── rk3568_patch
     		├── kernel.patch		# linux-5.10 rk3568 SOC patches
     		└── hdf.patch		# linux-5.10 rk3568 customized HDF patches
 ```
@@ -74,7 +74,7 @@ kernel/linux/patches
 	
 	> **Note**:
 	>
-	>In the OpenHarmony project build process, patches are installed after **kernel/linux/linux-\*\.\*** is copied. Before using the version-level build command of OpenHarmony, ensure that the **kernel/linux/linux-\*\.\*** source code is available.
+	>In the OpenHarmony project build process, patches are installed after **kernel/linux/linux-5.10** is copied. Before using the version-level build command of OpenHarmony, ensure that the **kernel/linux/linux-5.10** source code is available.
 	>
 	>The kernel built is generated in the **kernel** directory under the **out** directory. Modify the **config** file based on the kernel built, and copy the generated **.config** file to the corresponding path in the **config** repository. Then, the configuration takes effect.
 	
