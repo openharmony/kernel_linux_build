@@ -30,14 +30,14 @@ kernel/linux/patches
 ├── linux-4.19				# linux-4.19 相关patch
 │   ├── common_patch
 │   │		└── hdf.patch		# linux-4.19 HDF patches
-│   └── hi3516dv300_patch
-│   		└── hi3516dv300.patch	# linux-4.19 Hi3516D V300 SOC patches
+│   └── hispark_taurus_patch
+│   		└── hispark_taurus.patch	# linux-4.19 Hi3516D V300 SOC patches
 └── linux-5.10
     ├── common_patch
     │		└── hdf.patch		# linux-5.10 HDF patches
-    └── hi3516dv300_patch
-    │		└── hi3516dv300.patch	# linux-5.10 Hi3516D V300 SOC patches
-    └── rkrk3568_patch
+    └── hispark_taurus_patch
+    │		└── hispark_taurus.patch	# linux-5.10 Hi3516D V300 SOC patches
+    └── rk3568_patch
     		├── kernel.patch		# linux-5.10 rk3568 SOC patches
     		└── hdf.patch		# linux-5.10 rk3568 定制 HDF patches
 ```
@@ -74,7 +74,7 @@ kernel/linux/patches
 	
 	> **须知：** 
 	>
-	>由于OpenHarmony工程的编译构建流程中会拷贝kernel/linux/linux-\*\.\*的代码环境后进行打补丁动作，在使用OpenHarmony的版本级编译命令前，需要kernel/linux/linux-\*\.\*原代码环境。
+	>由于OpenHarmony工程的编译构建流程中会拷贝kernel/linux/linux-5.10的代码环境后进行打补丁动作，在使用OpenHarmony的版本级编译命令前，需要kernel/linux/linux-5.10原代码环境。
 	>
 	>根据不同系统工程，编译完成后会在out目录下的kernel目录中生成对应实际编译的内核，基于此目录的内核，进行对应的config修改，将最后生成的\.config文件cp到config仓对应的路径文件里，即可生效。
 	
