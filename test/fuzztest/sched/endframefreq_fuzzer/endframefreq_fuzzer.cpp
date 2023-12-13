@@ -24,8 +24,8 @@ bool EndFrameFreqFuzzTest(const uint8_t *data, size_t size)
     if (data == nullptr) {
         return ret;
     }
-    int grpId = 2;
-    ret = EndFrameFreq(grpId);
+    int margin = 2;
+    ret = EndFrameFreq(margin);
     return ret;
 }
 }
