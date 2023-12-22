@@ -32,7 +32,6 @@ using namespace testing::ext;
 using namespace std;
 
 constexpr size_t MAX_LENGTH = 100;
-constexpr size_t MAX_STR_LEN = 100;
 const char RTG_SCHED_IPC_MAGIC = 0xAB;
 const int RTG_ERR = -1;
 const int RTG_SUCC = 0;
@@ -53,10 +52,6 @@ const int MULTI_FRAME_NUM = 5;
     _IOWR(RTG_SCHED_IPC_MAGIC, SET_MIN_UTIL, struct proc_state_data)
 #define CMD_ID_SET_MARGIN \
     _IOWR(RTG_SCHED_IPC_MAGIC, SET_MARGIN, struct proc_state_data)
-#define CMD_ID_LIST_RTG_THREAD \
-    _IOWR(RTG_SCHED_IPC_MAGIC, LIST_RTG_THREAD, struct rtg_grp_data)
-#define CMD_ID_LIST_RTG \
-    _IOWR(RTG_SCHED_IPC_MAGIC, LIST_RTG, struct rtg_info)
 #define CMD_ID_SET_RTG_ATTR \
     _IOWR(RTG_SCHED_IPC_MAGIC, SET_RTG_ATTR, struct rtg_str_data)
 #define CMD_ID_SET_CONFIG \
@@ -217,31 +212,10 @@ static int AddThreadToRtg(int tid, int grpId, int prioType)
     return ret;
 }
 
-static int ClearRtgGrp(int GrpId)
-{
-    struct rtg_grp_data grp_data;
-    int ret;
-    int fd = BasicOpenRtgNode();
-    if (fd < 0) {
-        return fd;
-    }
-    (void)memset_s(&grp_data, sizeof(struct rtg_grp_data), 0, sizeof(struct rtg_grp_data));
-    grp_data.rtg_cmd = CMD_CLEAR_RTG_GRP;
-    grp_data.grp_id = GrpId;
-    ret = ioctl(fd, CMD_ID_SET_RTG, &grp_data);
-    if (ret < 0) {
-        return ret;
-    }
-
-    close(fd);
-    return ret;
-};
-
-static int BeginFrameFreq(int grpId, int stateParam)
+static int BeginFrameFreq(int stateParam)
 {
     int ret = 0;
     struct proc_state_data state_data;
-    state_data.grp_id = grpId;
     state_data.state_param = stateParam;
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
@@ -253,12 +227,11 @@ static int BeginFrameFreq(int grpId, int stateParam)
     return ret;
 }
 
-static int EndFrameFreq(int grpId)
+static int EndFrameFreq(int stateParam)
 {
     int ret = 0;
     struct proc_state_data state_data;
-    state_data.grp_id = grpId;
-    state_data.state_param = 0;
+    state_data.state_param = stateParam;
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
             return fd;
@@ -285,11 +258,10 @@ static int EndScene(int grpId)
     return ret;
 }
 
-static int SetStateParam(unsigned int cmd, int grpId, int stateParam)
+static int SetStateParam(unsigned int cmd, int stateParam)
 {
     int ret = 0;
     struct proc_state_data state_data;
-    state_data.grp_id = grpId;
     state_data.state_param = stateParam;
 
     int fd = BasicOpenRtgNode();
@@ -297,60 +269,6 @@ static int SetStateParam(unsigned int cmd, int grpId, int stateParam)
         return fd;
     }
     ret = ioctl(fd, cmd, &state_data);
-
-    close(fd);
-    return ret;
-}
-
-
-static int ListRtgThread(int grpId, vector<int> *rs)
-{
-    int ret = 0;
-    struct rtg_grp_data grp_data;
-    int fd = BasicOpenRtgNode();
-    if (fd < 0) {
-        return fd;
-    }
-    if (!rs) {
-       return RTG_ERR;
-    }
-    (void)memset_s(&grp_data, sizeof(struct rtg_grp_data), 0, sizeof(struct rtg_grp_data));
-    grp_data.grp_id = grpId;
-    ret = ioctl(fd, CMD_ID_LIST_RTG_THREAD, &grp_data);
-    if (ret < 0) {
-        return ret;
-    } else {
-        rs->clear();
-        for (int i = 0; i < grp_data.tid_num; i++) {
-            rs->push_back(grp_data.tids[i]);
-        }
-    }
-
-    close(fd);
-    return ret;
-}
-
-static int ListRtgGroup(vector<int> *rs)
-{
-    int ret = 0;
-    struct rtg_info rtg_info;
-    int fd = BasicOpenRtgNode();
-    if (fd < 0) {
-        return fd;
-    }
-    if (!rs) {
-        return RTG_ERR;
-    }
-    (void)memset_s(&rtg_info, sizeof(struct rtg_info), 0, sizeof(struct rtg_info));
-    ret = ioctl(fd, CMD_ID_LIST_RTG, &rtg_info);
-    if (ret < 0) {
-        return ret;
-    } else {
-        rs->clear();
-        for (int i = 0; i < rtg_info.rtg_num; i++) {
-            rs->push_back(rtg_info.rtgs[i]);
-        }
-    }
 
     close(fd);
     return ret;
@@ -370,25 +288,6 @@ static int SetFrameRateAndPrioType(int rtgId, int rate, int rtgType)
         return fd;
     }
     ret = ioctl(fd, CMD_ID_SET_RTG_ATTR, &strData);
-
-    close(fd);
-    return ret;
-}
-
-static int SetMaxVipRtgs(int rtframe)
-{
-    int ret = 0;
-    char str_data[MAX_STR_LEN] = {};
-    (void)sprintf_s(str_data, sizeof(str_data), "rtframe:%d", rtframe);
-    struct rtg_str_data strData;
-    strData.len = strlen(str_data);
-    strData.data = str_data;
-
-    int fd = BasicOpenRtgNode();
-    if (fd < 0) {
-        return fd;
-    }
-    ret = ioctl(fd, CMD_ID_SET_CONFIG, &strData);
 
     close(fd);
     return ret;
@@ -531,40 +430,6 @@ HWTEST_F(RtgTest, addRtgGrpFail, Function | MediumTest | Level1)
 }
 
 /**
- * @tc.name: clearRtgSucc
- * @tc.desc: Verify clear rtg function.
- * @tc.type: FUNC
- */
-HWTEST_F(RtgTest, clearRtgSucc, Function | MediumTest | Level1)
-{
-    int ret;
-    int grpId;
-    int pid = getpid();
-
-    grpId = CreateNewRtgGrp(VIP, 0);
-    ASSERT_GT(grpId, 0);
-    ret = AddThreadToRtg(pid, grpId, VIP);
-    ASSERT_EQ(ret, RTG_SUCC);
-    ret = ClearRtgGrp(grpId);
-    ASSERT_EQ(ret, RTG_SUCC);
-    ret = DestroyRtgGrp(grpId);
-    ASSERT_EQ(ret, RTG_SUCC);
-}
-
-/**
- * @tc.name: clearRtgFail
- * @tc.desc: Verify clear rtg function with error param.
- * @tc.type: FUNC
- */
-HWTEST_F(RtgTest, clearRtgFail, Function | MediumTest | Level1)
-{
-    int ret;
-
-    ret = ClearRtgGrp(-1);
-    ASSERT_NE(ret, RTG_SUCC);
-}
-
-/**
  * @tc.name: begainFrameFreqSucc
  * @tc.desc: Verify rtg frame start function.
  * @tc.type: FUNC
@@ -573,25 +438,34 @@ HWTEST_F(RtgTest, begainFrameFreqSucc, Function | MediumTest | Level1)
 {
     int ret;
     int grpId;
-
+    int pid = getpid();
+    vector<int> pids = {};
+    pids.push_back(pid);
     grpId = CreateNewRtgGrp(VIP, 0);
     ASSERT_GT(grpId, 0);
-    ret = BeginFrameFreq(grpId, 0);
-    ASSERT_EQ(ret, RTG_SUCC);
+    ret = AddThreadsToRtg(pids, grpId, VIP);
+    ASSERT_EQ(ret, 0);
+    ret = BeginFrameFreq(0);
+    ASSERT_EQ(ret, 0);
     ret = DestroyRtgGrp(grpId);
-    ASSERT_EQ(ret, RTG_SUCC);
+    ASSERT_EQ(ret, 0);
 }
 
 /**
- * @tc.name: begainFrameFreqFail
- * @tc.desc: Verify rtg frame start function with error param.
+ * @tc.name: RtgInterfaceBeginFrameFreqWithNoAddThreadtoGrp
+ * @tc.desc: Verify rtg frame start function with NoAddThreadtoGrp.
  * @tc.type: FUNC
  */
-HWTEST_F(RtgTest, begainFrameFreqFail, Function | MediumTest | Level1)
+HWTEST_F(RtgTest, RtgInterfaceBeginFrameFreqWithNoAddThreadtoGrp, Function | MediumTest | Level1)
 {
     int ret;
-    ret = BeginFrameFreq(-1, 0);
-    ASSERT_NE(ret, RTG_SUCC);
+    int grpId;
+    grpId = CreateNewRtgGrp(VIP, 0);
+    ASSERT_GT(grpId, 0);
+    ret = BeginFrameFreq(0);
+    ASSERT_NE(ret, 0);
+    ret = DestroyRtgGrp(grpId);
+    ASSERT_EQ(ret, 0);
 }
 
 /**
@@ -603,26 +477,36 @@ HWTEST_F(RtgTest, endFrameFreqSucc, Function | MediumTest | Level1)
 {
     int ret;
     int grpId;
-
+    int pid = getpid();
+    vector<int> pids = {};
+    pids.push_back(pid);
     grpId = CreateNewRtgGrp(VIP, 0);
     ASSERT_GT(grpId, 0);
-    ret = EndFrameFreq(grpId);
+    ret = AddThreadsToRtg(pids, grpId, VIP);
+    ASSERT_EQ(ret, 0);
+    ret = EndFrameFreq(0);
     ASSERT_EQ(ret, RTG_SUCC);
     ret = DestroyRtgGrp(grpId);
     ASSERT_EQ(ret, RTG_SUCC);
 }
 
 /**
- * @tc.name: endFrameFreqFail
- * @tc.desc: Verify rtg frame end function with error param.
+ * @tc.name: endFrameFreqWithNoAddThreadtoGrp
+ * @tc.desc: Verify rtg frame end function with NoAddThreadtoGrp.
  * @tc.type: FUNC
  */
-HWTEST_F(RtgTest, endFrameFreqFail, Function | MediumTest | Level1)
+HWTEST_F(RtgTest, endFrameFreqWithNoAddThreadtoGrp, Function | MediumTest | Level1)
 {
     int ret;
-    ret = EndFrameFreq(-1);
+    int grpId;
+    grpId = CreateNewRtgGrp(VIP, 0);
+    ASSERT_GT(grpId, 0);
+    ret = EndFrameFreq(0);
     ASSERT_NE(ret, RTG_SUCC);
+    ret = DestroyRtgGrp(grpId);
+    ASSERT_EQ(ret, RTG_SUCC);
 }
+
 
 /**
  * @tc.name: endSceneSucc
@@ -633,9 +517,13 @@ HWTEST_F(RtgTest, endSceneSucc, Function | MediumTest | Level1)
 {
     int ret;
     int grpId;
-
+    int pid = getpid();
+    vector<int> pids = {};
+    pids.push_back(pid);
     grpId = CreateNewRtgGrp(VIP, 0);
     ASSERT_GT(grpId, 0);
+    ret = AddThreadsToRtg(pids, grpId, VIP);
+    ASSERT_EQ(ret, 0);
     ret = EndScene(grpId);
     ASSERT_EQ(ret, RTG_SUCC);
     ret = DestroyRtgGrp(grpId);
@@ -664,26 +552,34 @@ HWTEST_F(RtgTest, setMinUtilSucc, Function | MediumTest | Level1)
 {
     int ret;
     int grpId;
-
+    int pid = getpid();
+    vector<int> pids = {};
+    pids.push_back(pid);
     grpId = CreateNewRtgGrp(VIP, 0);
     ASSERT_GT(grpId, 0);
-    ret = SetStateParam(CMD_ID_SET_MIN_UTIL, grpId, 0);
+    ret = AddThreadsToRtg(pids, grpId, VIP);
+    ASSERT_EQ(ret, 0);
+    ret = SetStateParam(CMD_ID_SET_MIN_UTIL, 0);
     ASSERT_EQ(ret, RTG_SUCC);
     ret = DestroyRtgGrp(grpId);
     ASSERT_EQ(ret, RTG_SUCC);
 }
 
 /**
- * @tc.name: setMinUtilFail
- * @tc.desc: Verify set min util function with Error Param.
+ * @tc.name: setMinUtilWithNoAddThreadtoGrp
+ * @tc.desc: Verify set min util function with NoAddThreadtoGrp.
  * @tc.type: FUNC
  */
-HWTEST_F(RtgTest, setMinUtilFail, Function | MediumTest | Level1)
+HWTEST_F(RtgTest, setMinUtilWithNoAddThreadtoGrp, Function | MediumTest | Level1)
 {
     int ret;
-
-    ret = SetStateParam(CMD_ID_SET_MIN_UTIL, -1, 0);
+    int grpId;
+    grpId = CreateNewRtgGrp(VIP, 0);
+    ASSERT_GT(grpId, 0);
+    ret = SetStateParam(CMD_ID_SET_MIN_UTIL, 0);
     ASSERT_NE(ret, RTG_SUCC);
+    ret = DestroyRtgGrp(grpId);
+    ASSERT_EQ(ret, RTG_SUCC);
 }
 
 /**
@@ -695,93 +591,34 @@ HWTEST_F(RtgTest, setMarginSucc, Function | MediumTest | Level1)
 {
     int ret;
     int grpId;
-
+    int pid = getpid();
+    vector<int> pids = {};
+    pids.push_back(pid);
     grpId = CreateNewRtgGrp(VIP, 0);
     ASSERT_GT(grpId, 0);
-    ret = SetStateParam(CMD_ID_SET_MARGIN, grpId, 0);
+    ret = AddThreadsToRtg(pids, grpId, VIP);
+    ASSERT_EQ(ret, 0);
+    ret = SetStateParam(CMD_ID_SET_MARGIN, 0);
     ASSERT_EQ(ret, RTG_SUCC);
     ret = DestroyRtgGrp(grpId);
     ASSERT_EQ(ret, RTG_SUCC);
 }
 
 /**
- * @tc.name: setMarginFail
- * @tc.desc: Verify set min margin function with error param.
+ * @tc.name: setMarginWithNoAddThreadtoGrp
+ * @tc.desc: Verify set min margin function with NoAddThreadtoGrp.
  * @tc.type: FUNC
  */
-HWTEST_F(RtgTest, setMarginFail, Function | MediumTest | Level1)
-{
-    int ret;
-
-    ret = SetStateParam(CMD_ID_SET_MARGIN, -1, 0);
-    ASSERT_NE(ret, RTG_SUCC);
-}
-
-/**
- * @tc.name: listRtgThreadSucc
- * @tc.desc: Verify list rtg thread function.
- * @tc.type: FUNC
- */
-HWTEST_F(RtgTest, ListRtgThreadSucc, Function | MediumTest | Level1)
+HWTEST_F(RtgTest, setMarginWithNoAddThreadtoGrp, Function | MediumTest | Level1)
 {
     int ret;
     int grpId;
-    vector<int> rs;
-
     grpId = CreateNewRtgGrp(VIP, 0);
     ASSERT_GT(grpId, 0);
-    ret = ListRtgThread(grpId, &rs);
-    ASSERT_EQ(ret, 0);
-    ret = DestroyRtgGrp(grpId);
-    ASSERT_EQ(ret, 0);
-}
-
-/**
- * @tc.name: listRtgThreadFail
- * @tc.desc: Verify list rtg thread function with null vector input.
- * @tc.type: FUNC
- */
-HWTEST_F(RtgTest, ListRtgThreadFail, Function | MediumTest | Level1)
-{
-    int ret;
-    int grpId;
-    vector<int> rs;
-
-    grpId = CreateNewRtgGrp(VIP, 0);
-    ASSERT_GT(grpId, 0);
-    ret = ListRtgThread(grpId, nullptr);
-    ASSERT_NE(ret, RTG_SUCC);
-    ret = ListRtgThread(-1, &rs);
+    ret = SetStateParam(CMD_ID_SET_MARGIN, 0);
     ASSERT_NE(ret, RTG_SUCC);
     ret = DestroyRtgGrp(grpId);
     ASSERT_EQ(ret, RTG_SUCC);
-}
-
-/**
- * @tc.name: listRtgSucc
- * @tc.desc: Verify list rtg function.
- * @tc.type: FUNC
- */
-HWTEST_F(RtgTest, ListRtgSucc, Function | MediumTest | Level1)
-{
-    int ret;
-    vector<int> rs;
-
-    ret = ListRtgGroup(&rs);
-    ASSERT_EQ(ret, RTG_SUCC);
-}
-
-/**
- * @tc.name: listRtgFail
- * @tc.desc: Verify list rtg function with error param.
- * @tc.type: FUNC
- */
-HWTEST_F(RtgTest, ListRtgFail, Function | MediumTest | Level1)
-{
-    int ret;
-
-    ret = ListRtgGroup(nullptr);
-    ASSERT_NE(ret, RTG_SUCC);
 }
 
 /**
@@ -817,37 +654,6 @@ HWTEST_F(RtgTest, SetRtgAttrFail, Function | MediumTest | Level1)
     ASSERT_NE(ret, RTG_SUCC);
     ret = DestroyRtgGrp(grpId);
     ASSERT_EQ(ret, RTG_SUCC);
-}
-
-/**
- * @tc.name: SetMaxVipRtgSucc
- * @tc.desc: Verify rtg max vip num set function.
- * @tc.type: FUNC
- */
-HWTEST_F(RtgTest, SetMaxVipRtgSucc, Function | MediumTest | Level1)
-{
-    int ret;
-
-    ret = SetMaxVipRtgs(2);
-    ASSERT_EQ(ret, RTG_SUCC);
-}
-
-/**
- * @tc.name: SetMaxVipRtgFail
- * @tc.desc: Verify rtg max vip num set function with error param.
- * @tc.type: FUNC
- */
-HWTEST_F(RtgTest, SetMaxVipRtgFail, Function | MediumTest | Level1)
-{
-    int ret;
-
-    // set 0 vip num
-    ret = SetMaxVipRtgs(0);
-    ASSERT_NE(ret, RTG_SUCC);
-
-    // set large vip num
-    ret = SetMaxVipRtgs(50000);
-    ASSERT_NE(ret, RTG_SUCC);
 }
 
 /**
