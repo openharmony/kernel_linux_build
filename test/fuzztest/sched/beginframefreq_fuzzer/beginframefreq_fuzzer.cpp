@@ -31,8 +31,7 @@ bool BeginFrameFreqFuzzTest(const uint8_t *data, size_t size)
         if (margin < marginLowerLimitTime || margin > marginUpperLimitTime) {
             return ret;
         }
-        int grpId = 2;
-        ret = BeginFrameFreq(grpId, margin);
+        ret = BeginFrameFreq(margin);
     }
     return ret;
 }
