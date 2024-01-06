@@ -39,42 +39,42 @@ const int MAX_TID_NUM = 5;
 const int MULTI_FRAME_NUM = 5;
 
 #define CMD_ID_SET_ENABLE \
-    _IOWR(RTG_SCHED_IPC_MAGIC, SET_ENABLE, struct rtg_enable_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, SET_ENABLE, struct RtgEnableData)
 #define CMD_ID_SET_RTG \
-    _IOWR(RTG_SCHED_IPC_MAGIC, SET_RTG, struct rtg_str_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, SET_RTG, struct RtgStrData)
 #define CMD_ID_BEGIN_FRAME_FREQ \
-    _IOWR(RTG_SCHED_IPC_MAGIC, BEGIN_FRAME_FREQ, struct proc_state_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, BEGIN_FRAME_FREQ, struct ProcStateData)
 #define CMD_ID_END_FRAME_FREQ \
-    _IOWR(RTG_SCHED_IPC_MAGIC, END_FRAME_FREQ, struct proc_state_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, END_FRAME_FREQ, struct ProcStateData)
 #define CMD_ID_END_SCENE \
-    _IOWR(RTG_SCHED_IPC_MAGIC, END_SCENE, struct proc_state_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, END_SCENE, struct ProcStateData)
 #define CMD_ID_SET_MIN_UTIL \
-    _IOWR(RTG_SCHED_IPC_MAGIC, SET_MIN_UTIL, struct proc_state_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, SET_MIN_UTIL, struct ProcStateData)
 #define CMD_ID_SET_MARGIN \
-    _IOWR(RTG_SCHED_IPC_MAGIC, SET_MARGIN, struct proc_state_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, SET_MARGIN, struct ProcStateData)
 #define CMD_ID_SET_RTG_ATTR \
-    _IOWR(RTG_SCHED_IPC_MAGIC, SET_RTG_ATTR, struct rtg_str_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, SET_RTG_ATTR, struct RtgStrData)
 #define CMD_ID_SET_CONFIG \
-    _IOWR(RTG_SCHED_IPC_MAGIC, SET_CONFIG, struct rtg_str_data)
+    _IOWR(RTG_SCHED_IPC_MAGIC, SET_CONFIG, struct RtgStrData)
 
-struct rtg_enable_data {
+struct RtgEnableData {
     int enable;
     int len;
     char *data;
 };
 
-struct rtg_str_data {
+struct RtgStrData {
     int type;
     int len;
     char *data;
 };
 
-struct proc_state_data {
-    int grp_id;
-    int state_param;
+struct ProcStateData {
+    int grpId;
+    int stateParam;
 };
 
-enum grp_ctrl_cmd {
+enum GrpCtrlCmd {
     CMD_CREATE_RTG_GRP,
     CMD_ADD_RTG_THREAD,
     CMD_REMOVE_RTG_THREAD,
@@ -82,21 +82,21 @@ enum grp_ctrl_cmd {
     CMD_DESTROY_RTG_GRP
 };
 
-struct rtg_grp_data {
-    int rtg_cmd;
-    int grp_id;
-    int prio_type;
-    int rt_cnt;
-    int tid_num;
+struct RtgGrpData {
+    int rtgCmd;
+    int grpId;
+    int prioType;
+    int rtCnt;
+    int tidNum;
     int tids[MAX_TID_NUM];
 };
 
-struct rtg_info {
-    int rtg_num;
+struct RtgInfo {
+    int rtgNum;
     int rtgs[MULTI_FRAME_NUM];
 };
 
-enum rtg_sched_cmdid {
+enum RtgSchedCmdid {
     SET_ENABLE = 1,
     SET_RTG,
     SET_CONFIG,
@@ -113,7 +113,7 @@ enum rtg_sched_cmdid {
     RTG_CTRL_MAX_NR,
 };
 
-enum rtg_type : int {
+enum RtgType : int {
     VIP = 0,
     TOP_TASK_KEY,
     NORMAL_TASK,
@@ -134,7 +134,7 @@ static int BasicOpenRtgNode()
 
 static int EnableRtg(bool flag)
 {
-    struct rtg_enable_data enableData;
+    struct RtgEnableData enableData;
     char configStr[] = "load_freq_switch:1;sched_cycle:1";
 
     enableData.enable = flag;
@@ -155,21 +155,21 @@ static int EnableRtg(bool flag)
 
 static int CreateNewRtgGrp(int prioType, int rtNum)
 {
-    struct rtg_grp_data grp_data;
+    struct RtgGrpData grpData;
     int ret;
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
         return RTG_ERR;
     }
-    (void)memset_s(&grp_data, sizeof(struct rtg_grp_data), 0, sizeof(struct rtg_grp_data));
+    (void)memset_s(&grpData, sizeof(struct RtgGrpData), 0, sizeof(struct RtgGrpData));
     if ((prioType > 0) && (prioType < RTG_TYPE_MAX)) {
-        grp_data.prio_type = prioType;
+        grpData.prioType = prioType;
     }
     if (rtNum > 0) {
-        grp_data.rt_cnt = rtNum;
+        grpData.rtCnt = rtNum;
     }
-    grp_data.rtg_cmd = CMD_CREATE_RTG_GRP;
-    ret = ioctl(fd, CMD_ID_SET_RTG, &grp_data);
+    grpData.rtgCmd = CMD_CREATE_RTG_GRP;
+    ret = ioctl(fd, CMD_ID_SET_RTG, &grpData);
 
     close(fd);
     return ret;
@@ -177,16 +177,16 @@ static int CreateNewRtgGrp(int prioType, int rtNum)
 
 static int DestroyRtgGrp(int GrpId)
 {
-    struct rtg_grp_data grp_data;
+    struct RtgGrpData grpData;
     int ret;
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
         return fd;
     }
-    (void)memset_s(&grp_data, sizeof(struct rtg_grp_data), 0, sizeof(struct rtg_grp_data));
-    grp_data.rtg_cmd = CMD_DESTROY_RTG_GRP;
-    grp_data.grp_id = GrpId;
-    ret = ioctl(fd, CMD_ID_SET_RTG, &grp_data);
+    (void)memset_s(&grpData, sizeof(struct RtgGrpData), 0, sizeof(struct RtgGrpData));
+    grpData.rtgCmd = CMD_DESTROY_RTG_GRP;
+    grpData.grpId = GrpId;
+    ret = ioctl(fd, CMD_ID_SET_RTG, &grpData);
 
     close(fd);
     return ret;
@@ -194,19 +194,19 @@ static int DestroyRtgGrp(int GrpId)
 
 static int AddThreadToRtg(int tid, int grpId, int prioType)
 {
-    struct rtg_grp_data grp_data;
+    struct RtgGrpData grpData;
     int ret;
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
         return fd;
     }
-    (void)memset_s(&grp_data, sizeof(struct rtg_grp_data), 0, sizeof(struct rtg_grp_data));
-    grp_data.tid_num = 1;
-    grp_data.tids[0] = tid;
-    grp_data.grp_id = grpId;
-    grp_data.rtg_cmd = CMD_ADD_RTG_THREAD;
-    grp_data.prio_type = prioType;
-    ret = ioctl(fd, CMD_ID_SET_RTG, &grp_data);
+    (void)memset_s(&grpData, sizeof(struct RtgGrpData), 0, sizeof(struct RtgGrpData));
+    grpData.tidNum = 1;
+    grpData.tids[0] = tid;
+    grpData.grpId = grpId;
+    grpData.rtgCmd = CMD_ADD_RTG_THREAD;
+    grpData.prioType = prioType;
+    ret = ioctl(fd, CMD_ID_SET_RTG, &grpData);
 
     close(fd);
     return ret;
@@ -215,13 +215,13 @@ static int AddThreadToRtg(int tid, int grpId, int prioType)
 static int BeginFrameFreq(int stateParam)
 {
     int ret = 0;
-    struct proc_state_data state_data;
-    state_data.state_param = stateParam;
+    struct ProcStateData stateData;
+    stateData.stateParam = stateParam;
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
         return fd;
     }
-    ret = ioctl(fd, CMD_ID_BEGIN_FRAME_FREQ, &state_data);
+    ret = ioctl(fd, CMD_ID_BEGIN_FRAME_FREQ, &stateData);
 
     close(fd);
     return ret;
@@ -230,13 +230,13 @@ static int BeginFrameFreq(int stateParam)
 static int EndFrameFreq(int stateParam)
 {
     int ret = 0;
-    struct proc_state_data state_data;
-    state_data.state_param = stateParam;
+    struct ProcStateData stateData;
+    stateData.stateParam = stateParam;
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
             return fd;
         }
-    ret = ioctl(fd, CMD_ID_END_FRAME_FREQ, &state_data);
+    ret = ioctl(fd, CMD_ID_END_FRAME_FREQ, &stateData);
 
     close(fd);
     return ret;
@@ -245,14 +245,14 @@ static int EndFrameFreq(int stateParam)
 static int EndScene(int grpId)
 {
     int ret = 0;
-    struct proc_state_data state_data;
-    state_data.grp_id = grpId;
+    struct ProcStateData stateData;
+    stateData.grpId = grpId;
 
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
        return fd;
     }
-    ret = ioctl(fd, CMD_ID_END_SCENE, &state_data);
+    ret = ioctl(fd, CMD_ID_END_SCENE, &stateData);
 
     close(fd);
     return ret;
@@ -261,14 +261,14 @@ static int EndScene(int grpId)
 static int SetStateParam(unsigned int cmd, int stateParam)
 {
     int ret = 0;
-    struct proc_state_data state_data;
-    state_data.state_param = stateParam;
+    struct ProcStateData stateData;
+    stateData.stateParam = stateParam;
 
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
         return fd;
     }
-    ret = ioctl(fd, cmd, &state_data);
+    ret = ioctl(fd, cmd, &stateData);
 
     close(fd);
     return ret;
@@ -277,11 +277,11 @@ static int SetStateParam(unsigned int cmd, int stateParam)
 static int SetFrameRateAndPrioType(int rtgId, int rate, int rtgType)
 {
     int ret = 0;
-    char str_data[MAX_LENGTH] = {};
-    (void)sprintf_s(str_data, sizeof(str_data), "rtgId:%d;rate:%d;type:%d", rtgId, rate, rtgType);
-    struct rtg_str_data strData;
-    strData.len = strlen(str_data);
-    strData.data = str_data;
+    char formatData[MAX_LENGTH] = {};
+    (void)sprintf_s(formatData, sizeof(formatData), "rtgId:%d;rate:%d;type:%d", rtgId, rate, rtgType);
+    struct RtgStrData strData;
+    strData.len = strlen(formatData);
+    strData.data = formatData;
 
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
@@ -295,29 +295,29 @@ static int SetFrameRateAndPrioType(int rtgId, int rate, int rtgType)
 
 static int AddThreadsToRtg(vector<int> tids, int grpId, int prioType)
 {
-    struct rtg_grp_data grp_data;
+    struct RtgGrpData grpData;
     int ret;
     int fd = BasicOpenRtgNode();
 
     if (fd < 0) {
         return fd;
     }
-    (void)memset_s(&grp_data, sizeof(struct rtg_grp_data), 0, sizeof(struct rtg_grp_data));
+    (void)memset_s(&grpData, sizeof(struct RtgGrpData), 0, sizeof(struct RtgGrpData));
     int num = static_cast<int>(tids.size());
     if (num > MAX_TID_NUM) {
         return -1;
     }
-    grp_data.tid_num = num;
-    grp_data.grp_id = grpId;
-    grp_data.rtg_cmd = CMD_ADD_RTG_THREAD;
-    grp_data.prio_type = prioType;
+    grpData.tidNum = num;
+    grpData.grpId = grpId;
+    grpData.rtgCmd = CMD_ADD_RTG_THREAD;
+    grpData.prioType = prioType;
     for (int i = 0; i < num; i++) {
         if (tids[i] < 0) {
             return -1;
         }
-        grp_data.tids[i] = tids[i];
+        grpData.tids[i] = tids[i];
     }
-    ret = ioctl(fd, CMD_ID_SET_RTG, &grp_data);
+    ret = ioctl(fd, CMD_ID_SET_RTG, &grpData);
 
     close(fd);
     return ret;
@@ -423,7 +423,7 @@ HWTEST_F(RtgTest, addRtgGrpFail, Function | MediumTest | Level1)
     ASSERT_NE(ret, 0);
 
     // error grpid
-    ret=AddThreadToRtg(pid, -1, VIP);
+    ret = AddThreadToRtg(pid, -1, VIP);
     ASSERT_NE(ret, RTG_SUCC);
     ret = DestroyRtgGrp(grpId);
     ASSERT_EQ(ret, 0);
