@@ -91,7 +91,7 @@ endif
 ifeq ($(PRODUCT_PATH), vendor/hisilicon/watchos)
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(PRODUCT_PATCH_FILE)
 else
-	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(DEVICE_PATCH_FILE)
+	$(hide) cd $(KERNEL_SRC_TMP_PATH) && test -f $(DEVICE_PATCH_FILE) && patch -p1 < $(DEVICE_PATCH_FILE) || true
 endif
 
 ifneq ($(findstring $(BUILD_TYPE), small),)
