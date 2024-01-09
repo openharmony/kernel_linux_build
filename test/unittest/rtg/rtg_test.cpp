@@ -175,7 +175,7 @@ static int CreateNewRtgGrp(int prioType, int rtNum)
     return ret;
 }
 
-static int DestroyRtgGrp(int GrpId)
+static int DestroyRtgGrp(int grpId)
 {
     struct RtgGrpData grpData;
     int ret;
@@ -185,7 +185,7 @@ static int DestroyRtgGrp(int GrpId)
     }
     (void)memset_s(&grpData, sizeof(struct RtgGrpData), 0, sizeof(struct RtgGrpData));
     grpData.rtgCmd = CMD_DESTROY_RTG_GRP;
-    grpData.grpId = GrpId;
+    grpData.grpId = grpId;
     ret = ioctl(fd, CMD_ID_SET_RTG, &grpData);
 
     close(fd);
