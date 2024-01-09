@@ -55,9 +55,9 @@ constexpr unsigned int ACCESS_TOKEN_GRPID = 3020;
 constexpr unsigned int ACCESS_TOKEN_OTHER_UID = 1234;
 constexpr unsigned int ACCESS_TOKEN_OTHER_GRPID = 1234;
 
-const char dev_accesstokenid[] = "/dev/access_token_id";
+const char DEV_ACCESSTOKENID[] = "/dev/access_token_id";
 
-struct tokeninfo {
+struct Tokeninfo {
     pid_t               pid;
     pid_t               tid;
     unsigned long long  tokenid;
@@ -85,9 +85,9 @@ static unsigned long long GenRand64(void)
 
 static int GetTokenid(unsigned long long *token)
 {
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return -1;
     }
 
@@ -104,9 +104,9 @@ static int GetTokenid(unsigned long long *token)
 
 static int SetTokenid(unsigned long long *token)
 {
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return -1;
     }
 
@@ -123,9 +123,9 @@ static int SetTokenid(unsigned long long *token)
 
 static int GetfTokenid(unsigned long long *ftoken)
 {
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return -1;
     }
 
@@ -142,9 +142,9 @@ static int GetfTokenid(unsigned long long *ftoken)
 
 static int SetfTokenid(unsigned long long *ftoken)
 {
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return -1;
     }
 
@@ -169,7 +169,7 @@ static void GetCurToken(unsigned long long *token, unsigned long long *ftoken)
 
 static void *CheckChildThreadInheritance(void *args)
 {
-    struct tokeninfo *tinfo = static_cast<struct tokeninfo *> (args);
+    struct Tokeninfo *tinfo = static_cast<struct Tokeninfo *>(args);
 
     tinfo->pid = getpid();
     tinfo->tid = gettid();
@@ -182,7 +182,7 @@ static void *CheckChildThreadInheritance(void *args)
 
 static void *CheckChildThreadSetIndepent(void *args)
 {
-    struct tokeninfo *tinfo = static_cast<struct tokeninfo *> (args);
+    struct Tokeninfo *tinfo = static_cast<struct Tokeninfo *>(args);
     unsigned long long tokenSet = GenRand64();
     unsigned long long ftokenSet = GenRand64();
     unsigned long long tokenidGet = INVAL_TOKEN;
@@ -288,7 +288,7 @@ HWTEST_F(AccesstokenidTest, CheckChildThreadInheritance, Function | MediumTest |
     unsigned long long tokenSet = GenRand64();
     unsigned long long ftokenSet = GenRand64();
 
-    struct tokeninfo tinfo;
+    struct Tokeninfo tinfo;
     tinfo.pid = getpid();
     tinfo.tid = gettid();
     tinfo.tokenid = INVAL_TOKEN;
@@ -330,7 +330,7 @@ HWTEST_F(AccesstokenidTest, CheckChildThreadSetIndepent, Function | MediumTest |
     unsigned long long tokenSet = GenRand64();
     unsigned long long ftokenSet = GenRand64();
 
-    struct tokeninfo tinfo;
+    struct Tokeninfo tinfo;
     tinfo.pid = getpid();
     tinfo.tid = gettid();
     tinfo.tokenid = INVAL_TOKEN;
@@ -365,9 +365,9 @@ HWTEST_F(AccesstokenidTest, CheckChildThreadSetIndepent, Function | MediumTest |
  */
 HWTEST_F(AccesstokenidTest, AbnormalGetTokenid, Function | MediumTest | Level1)
 {
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -385,9 +385,9 @@ HWTEST_F(AccesstokenidTest, AbnormalGetTokenid, Function | MediumTest | Level1)
  */
 HWTEST_F(AccesstokenidTest, AbnormalSetTokenid, Function | MediumTest | Level1)
 {
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -405,9 +405,9 @@ HWTEST_F(AccesstokenidTest, AbnormalSetTokenid, Function | MediumTest | Level1)
  */
 HWTEST_F(AccesstokenidTest, AbnormalGetfTokenid, Function | MediumTest | Level1)
 {
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -425,9 +425,9 @@ HWTEST_F(AccesstokenidTest, AbnormalGetfTokenid, Function | MediumTest | Level1)
  */
 HWTEST_F(AccesstokenidTest, AbnormalSetfTokenid, Function | MediumTest | Level1)
 {
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -447,9 +447,9 @@ HWTEST_F(AccesstokenidTest, AbnormalIoctlCmd, Function | MediumTest | Level1)
 {
     unsigned long long token;
 
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -477,9 +477,9 @@ HWTEST_F(AccesstokenidTest, OtherUidSetTokenid, Function | MediumTest | Level1)
         printf("setuid error %d \r\n", ret);
     }
 
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -505,9 +505,9 @@ HWTEST_F(AccesstokenidTest, OtherUidGetTokenid, Function | MediumTest | Level1)
         printf("setuid error %d \r\n", ret);
     }
 
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -535,9 +535,9 @@ HWTEST_F(AccesstokenidTest, WithoutGrpSetfTokenid, Function | MediumTest | Level
         printf("setgroups error %d \r\n", ret);
     }
 
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -565,9 +565,9 @@ HWTEST_F(AccesstokenidTest, WithoutGrpGetfTokenid, Function | MediumTest | Level
         printf("setgroups error %d \r\n", ret);
     }
 
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -595,9 +595,9 @@ HWTEST_F(AccesstokenidTest, WithGrpSetfTokenid, Function | MediumTest | Level1)
         printf("setgroups error %d \r\n", ret);
     }
 
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 
@@ -625,9 +625,9 @@ HWTEST_F(AccesstokenidTest, WithGrpGetfTokenid, Function | MediumTest | Level1)
         printf("setgroups error %d \r\n", ret);
     }
 
-    int fd = open(dev_accesstokenid, O_RDWR);
+    int fd = open(DEV_ACCESSTOKENID, O_RDWR);
     if (fd < 0) {
-        printf("open %s failed\r\n", dev_accesstokenid);
+        printf("open %s failed\r\n", DEV_ACCESSTOKENID);
         return;
     }
 

@@ -33,4 +33,4 @@ static void tracepoint_test_exit_module(void)
 /* module entry points */
 module_init(tracepoint_test_init_module);
 module_exit(tracepoint_test_exit_module);
-MODULE_LICENSE ("GPL v2");
+MODULE_LICENSE("GPL v2");
