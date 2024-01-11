@@ -32,4 +32,4 @@ static void aml_emmc_partition_test_exit_module(void)
 /* module entry points */
 module_init(aml_emmc_partition_test_init_module);
 module_exit(aml_emmc_partition_test_exit_module);
-MODULE_LICENSE ("GPL v2");
+MODULE_LICENSE("GPL v2");

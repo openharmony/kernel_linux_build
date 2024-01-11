@@ -13,8 +13,8 @@
 #define TRACE_SYSTEM emmc
 
 #define TRACE_INCLUDE_PATH trace/hooks
-#if !defined(_TRACE_HOOKS_EMMC_H) || defined(TRACE_HEADER_MULTI_READ)
-#define _TRACE_HOOKS_EMMC_H
+#if !defined(TRACE_HOOKS_EMMC_H) || defined(TRACE_HEADER_MULTI_READ)
+#define TRACE_HOOKS_EMMC_H
 
 #include <trace/hooks/vendor_hooks.h>
 #include <linux/tracepoint.h>

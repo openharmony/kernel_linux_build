@@ -32,4 +32,4 @@ static void mmap_test_exit_module(void)
 /* module entry points */
 module_init(mmap_test_init_module);
 module_exit(mmap_test_exit_module);
-MODULE_LICENSE ("GPL v2");
+MODULE_LICENSE("GPL v2");
