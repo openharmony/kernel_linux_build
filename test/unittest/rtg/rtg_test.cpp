@@ -123,8 +123,8 @@ enum RtgType : int {
 static int BasicOpenRtgNode()
 {
     char fileName[] = "/proc/self/sched_rtg_ctrl";
-    int fd = open(fileName, O_RDWR);
 
+    int fd = open(fileName, O_RDWR);
     if (fd < 0) {
         cout << "open node err." << endl;
     }
@@ -250,7 +250,7 @@ static int EndScene(int grpId)
 
     int fd = BasicOpenRtgNode();
     if (fd < 0) {
-       return fd;
+        return fd;
     }
     ret = ioctl(fd, CMD_ID_END_SCENE, &stateData);
 
@@ -297,8 +297,8 @@ static int AddThreadsToRtg(vector<int> tids, int grpId, int prioType)
 {
     struct RtgGrpData grpData;
     int ret;
-    int fd = BasicOpenRtgNode();
 
+    int fd = BasicOpenRtgNode();
     if (fd < 0) {
         return fd;
     }
@@ -323,13 +323,15 @@ static int AddThreadsToRtg(vector<int> tids, int grpId, int prioType)
     return ret;
 }
 
-void RtgTest::SetUp() {
+void RtgTest::SetUp()
+{
     // must enable rtg before use the interface
     int ret = EnableRtg(true);
     ASSERT_EQ(RTG_SUCC, ret);
 }
 
-void RtgTest::TearDown() {
+void RtgTest::TearDown()
+{
     // disable rtg after use the interface
     int ret = EnableRtg(false);
     ASSERT_EQ(RTG_SUCC, ret);
@@ -673,7 +675,7 @@ HWTEST_F(RtgTest, RtgAddMutipleThreadsSucc, Function | MediumTest | Level1)
         ASSERT_TRUE(pid[i] >= 0) << "> parent: fork errno = " << errno;
         if (pid[i] == 0) {
             usleep(50000);
-             _Exit(0);
+            _Exit(0);
         }
         threads.push_back(pid[i]);
     }
