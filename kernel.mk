@@ -33,18 +33,24 @@ KERNEL_HOSTCC := $(CLANG_HOST_TOOLCHAIN)/clang
 KERNEL_PREBUILT_MAKE := make
 CLANG_CC := $(CLANG_HOST_TOOLCHAIN)/clang
 
+KERNEL_CROSS_COMPILE :=
 ifeq ($(KERNEL_ARCH), arm)
     KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/arm/gcc-linaro-7.5.0-arm-linux-gnueabi/bin
     KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/arm-linux-gnueabi-
 else ifeq ($(KERNEL_ARCH), arm64)
     KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/aarch64/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin
     KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/aarch64-linux-gnu-
+else ifeq ($(KERNEL_ARCH), riscv64)
+    PATH := $(CLANG_HOST_TOOLCHAIN):$(PATH)
+    KERNEL_ARCH := riscv
+    KERNEL_TARGET_TOOLCHAIN_PREFIX :=
+    KERNEL_CROSS_COMPILE += LLVM=1
+    KERNEL_CROSS_COMPILE += LLVM_IAS=1
 else ifeq ($(KERNEL_ARCH), x86_64)
     KERNEL_TARGET_TOOLCHAIN := gcc
     KERNEL_TARGET_TOOLCHAIN_PREFIX :=
 endif
 
-KERNEL_CROSS_COMPILE :=
 ifeq ($(DEVICE_NAME), hispark_phoenix)
 KERNEL_CROSS_COMPILE += CONFIG_MSP="y"
 endif
@@ -85,7 +91,7 @@ endif
 ifeq ($(PRODUCT_PATH), vendor/hisilicon/watchos)
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(PRODUCT_PATCH_FILE)
 else
-	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(DEVICE_PATCH_FILE)
+	$(hide) cd $(KERNEL_SRC_TMP_PATH) && test -f $(DEVICE_PATCH_FILE) && patch -p1 < $(DEVICE_PATCH_FILE) || true
 endif
 
 ifneq ($(findstring $(BUILD_TYPE), small),)
