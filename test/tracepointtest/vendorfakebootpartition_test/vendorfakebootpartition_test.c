@@ -32,4 +32,4 @@ static void fake_boot_partition_test_exit_module(void)
 /* module entry points */
 module_init(fake_boot_partition_test_init_module);
 module_exit(fake_boot_partition_test_exit_module);
-MODULE_LICENSE ("GPL v2");
+MODULE_LICENSE("GPL v2");

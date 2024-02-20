@@ -9,12 +9,15 @@
  * limitations under the License.
  */
 
+#ifnef TEST_TRACEPOINT_EMMC_H
+#define TEST_TRACEPOINT_EMMC_H
+
 #undef TRACE_SYSTEM
 #define TRACE_SYSTEM emmc
 
 #define TRACE_INCLUDE_PATH trace/hooks
-#if !defined(_TRACE_HOOKS_EMMC_H) || defined(TRACE_HEADER_MULTI_READ)
-#define _TRACE_HOOKS_EMMC_H
+#if !defined(TRACE_HOOKS_EMMC_H) || defined(TRACE_HEADER_MULTI_READ)
+#define TRACE_HOOKS_EMMC_H
 
 #include <trace/hooks/vendor_hooks.h>
 #include <linux/tracepoint.h>
@@ -33,3 +36,5 @@ DECLARE_HOOK(vendor_fake_boot_partition,
 
 /* This part must be outside protection */
 #include <trace/define_trace.h>
+
+#endif //TEST_TRACEPOINT_EMMC_H

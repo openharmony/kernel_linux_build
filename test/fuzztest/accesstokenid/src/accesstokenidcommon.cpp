@@ -21,11 +21,11 @@
 namespace OHOS {
 namespace Kernel {
 namespace AccessToken {
-const char *DEVACCESSTOKENID = "/dev/access_token_id";
+const char *g_devaccesstokenid = "/dev/access_token_id";
 
 int GetTokenid(unsigned long long *token)
 {
-    int fd = open(DEVACCESSTOKENID, O_RDWR);
+    int fd = open(g_devaccesstokenid, O_RDWR);
     if (fd < 0) {
         return -1;
     }
@@ -40,7 +40,7 @@ int GetTokenid(unsigned long long *token)
 
 int SetTokenid(unsigned long long *token)
 {
-    int fd = open(DEVACCESSTOKENID, O_RDWR);
+    int fd = open(g_devaccesstokenid, O_RDWR);
     if (fd < 0) {
         return -1;
     }
@@ -182,7 +182,7 @@ int AccessTokenidGrpTestOther(uint8_t *dataToken)
 
 int GetfTokenid(unsigned long long *ftoken)
 {
-    int fd = open(DEVACCESSTOKENID, O_RDWR);
+    int fd = open(g_devaccesstokenid, O_RDWR);
     if (fd < 0) {
         return -1;
     }
@@ -199,7 +199,7 @@ int GetfTokenid(unsigned long long *ftoken)
 
 int SetfTokenid(unsigned long long *ftoken)
 {
-    int fd = open(DEVACCESSTOKENID, O_RDWR);
+    int fd = open(g_devaccesstokenid, O_RDWR);
     if (fd < 0) {
         return -1;
     }

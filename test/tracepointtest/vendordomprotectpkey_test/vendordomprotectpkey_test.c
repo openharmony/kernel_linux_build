@@ -32,4 +32,4 @@ static void mprotect_pkey_test_exit_module(void)
 /* module entry points */
 module_init(mprotect_pkey_test_init_module);
 module_exit(mprotect_pkey_test_exit_module);
-MODULE_LICENSE ("GPL v2");
+MODULE_LICENSE("GPL v2");
