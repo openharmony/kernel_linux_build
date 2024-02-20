@@ -13,12 +13,12 @@
 #include <cstdint>
 #include "hccommon.h"
 
-const char *HC_HOT_DATA_LOWER_LIMIT = "/sys/fs/f2fs/loop1/hc_hot_data_lower_limit";
+const char *g_hcHotDataLowerLimit = "/sys/fs/f2fs/loop1/hc_hot_data_lower_limit";
 
 namespace OHOS {
 bool HcHotDataLowerLimitFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = HcFuzzTest(data, HC_HOT_DATA_LOWER_LIMIT, size);
+    bool ret = HcFuzzTest(data, g_hcHotDataLowerLimit, size);
     return ret;
 }
 } // namespace OHOS
