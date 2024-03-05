@@ -13,12 +13,12 @@
 #include <cstdint>
 #include "hccommon.h"
 
-const char *g_hcHotNodeWaterline = "/sys/fs/f2fs/loop1/hc_hot_node_waterline";
+const char *HC_HOT_NODE_WATERLINE = "/sys/fs/f2fs/loop1/hc_hot_node_waterline";
 
 namespace OHOS {
 bool HcHotNodeWaterlineFuzzTest(const uint8_t *data, size_t size)
 {
-    bool ret = HcFuzzTest(data, g_hcHotNodeWaterline, size);
+    bool ret = HcFuzzTest(data, HC_HOT_NODE_WATERLINE, size);
     return ret;
 }
 } // namespace OHOS
