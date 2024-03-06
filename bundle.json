@@ -9,21 +9,19 @@
     "scripts": {},
     "dirs": {},
     "segment": {
-        "destPath": "kernel/linux/build"
+        "destPath": "kernel/linux/linux-5.10"
     },
     "component": {
         "name": "linux",
         "subsystem": "kernel",
         "syscap": [
-            "SystemCapability.Kernel.Linux"
         ],
         "features": [],
         "adapted_system_type": [
-            "small",
             "standard"
         ],
-        "rom": "",
-        "ram": "",
+        "rom": "64MB",
+        "ram": "900MB",
         "deps": {
             "components": [],
             "third_party": []
