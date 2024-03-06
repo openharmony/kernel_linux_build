@@ -13,12 +13,12 @@
 #include <cstdint>
 #include "hccommon.h"
 
-const char *g_hcEnable = "/sys/fs/f2fs/loop1/hc_enable";
+const char *HC_ENABLE = "/sys/fs/f2fs/loop1/hc_enable";
 
 namespace OHOS {
 bool HcEnableFuzzer(const uint8_t *data, size_t size)
 {
-    bool ret = HcFuzzTest(data, g_hcEnable, size);
+    bool ret = HcFuzzTest(data, HC_ENABLE, size);
     return ret;
 }
 } // namespace OHOS
