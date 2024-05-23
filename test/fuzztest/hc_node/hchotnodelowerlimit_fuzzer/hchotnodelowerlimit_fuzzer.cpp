@@ -13,12 +13,12 @@
 #include <cstdint>
 #include "hccommon.h"
 
-const char *g_hcHotNodeLowerLimit = "/sys/fs/f2fs/loop1/hc_hot_node_lower_limit";
+const char *HC_HOT_NODE_LOWER_LIMIT = "/sys/fs/f2fs/loop1/hc_hot_node_lower_limit";
 
 namespace OHOS {
 bool HcHotNodeLowerLimitFuzzTest(const uint8_t *data, size_t size)
 {
-    bool ret = HcFuzzTest(data, g_hcHotNodeLowerLimit, size);
+    bool ret = HcFuzzTest(data, HC_HOT_NODE_LOWER_LIMIT, size);
     return ret;
 }
 } // namespace OHOS
