@@ -49,13 +49,19 @@ else ifeq ($(KERNEL_ARCH), riscv64)
 else ifeq ($(KERNEL_ARCH), x86_64)
     KERNEL_TARGET_TOOLCHAIN := gcc
     KERNEL_TARGET_TOOLCHAIN_PREFIX :=
+else ifeq ($(KERNEL_ARCH), loongarch64)
+    KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/loongarch64/gcc-loongarch64-linux-gnu/bin
+    KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/loongarch64-unknown-linux-gnu-
+    KERNEL_ARCH := loongarch
 endif
 
 ifeq ($(DEVICE_NAME), hispark_phoenix)
 KERNEL_CROSS_COMPILE += CONFIG_MSP="y"
 endif
 
+ifneq ($(KERNEL_ARCH), loongarch)
 KERNEL_CROSS_COMPILE += CC="$(CLANG_CC)"
+endif
 
 ifneq ($(KERNEL_ARCH), x86_64)
 KERNEL_CROSS_COMPILE += CROSS_COMPILE="$(KERNEL_TARGET_TOOLCHAIN_PREFIX)"
