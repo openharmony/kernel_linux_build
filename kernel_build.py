@@ -53,16 +53,18 @@ class Reporter:
 
 
     def report_build_warning(self, filename, regex, details):
+        report = {}
+
         if len(details) == 0 or filename is None:
-            return None
+            return report
 
         if not os.path.exists(os.path.join(self.path, filename)):
-            return None
+            return report
 
         line = details[0]
         try:
             warning = re.search(regex, line).group(0)
-        except:
+        except GetBuildWaringErr as e:
             print('Except>>>', details)
             return
 
