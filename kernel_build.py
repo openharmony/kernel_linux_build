@@ -66,7 +66,7 @@ class Reporter:
             warning = re.search(regex, line).group(0)
         except GetBuildWaringErr as e:
             print('Except>>>', details)
-            return
+            return report
 
         report = {
             'title': self.format_title("%s: %s" % (filename, warning)),
