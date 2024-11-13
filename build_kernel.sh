@@ -41,6 +41,9 @@ elif [ "$5" == "arm64" ];then
 elif [ "$5" == "riscv64" ];then
     cp ${2}/kernel/OBJ/${8}/arch/riscv/boot/Image ${3}/Image
 
+elif [ "$5" == "loongarch64" ];then
+    cp ${2}/kernel/OBJ/${8}/vmlinuz.efi ${3}/vmlinuz.efi
+
 elif [ "$5" == "x86_64" ];then
     cp ${2}/kernel/OBJ/${8}/arch/x86/boot/bzImage ${3}/bzImage
 fi

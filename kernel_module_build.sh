@@ -38,11 +38,15 @@ elif [ "$KERNEL_ARCH" == "arm64" ];then
     kernel_image="Image"
 elif [ "$KERNEL_ARCH" == "x86_64" ];then
     kernel_image="bzImage"
+elif [ "$KERNEL_ARCH" == "loongarch64" ];then
+    kernel_image="vmlinuz.efi"
 fi
 export KERNEL_IMAGE=${kernel_image}
 
 if [ "$KERNEL_ARCH" == "riscv64" ];then
     LINUX_KERNEL_IMAGE_FILE=${LINUX_KERNEL_OBJ_OUT}/arch/riscv/boot/Image
+elif [ "$KERNEL_ARCH" == "loongarch64" ];then
+    LINUX_KERNEL_IMAGE_FILE=${LINUX_KERNEL_OBJ_OUT}/${kernel_image}
 else
     LINUX_KERNEL_IMAGE_FILE=${LINUX_KERNEL_OBJ_OUT}/arch/${KERNEL_ARCH}/boot/${kernel_image}
 fi

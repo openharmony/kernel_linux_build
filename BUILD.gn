@@ -29,6 +29,8 @@ if (target_cpu == "arm") {
   kernel_image = "Image"
 } else if (target_cpu == "x86_64") {
   kernel_image = "bzImage"
+} else if (target_cpu == "loongarch64") {
+  kernel_image = "vmlinuz.efi"
 }
 
 if (os_level == "mini" || os_level == "small") {
