@@ -18,7 +18,7 @@ if (is_standard_system) {
 }
 
 if (is_standard_system) {
-  module_output_path = "linuxkerneltest/"
+  module_output_path = "linux-linux/"
   linuxkerneltest_public_deps = [
     "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/googletest:gtest_main",
