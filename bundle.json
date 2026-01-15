@@ -23,7 +23,9 @@
         "rom": "64MB",
         "ram": "900MB",
         "deps": {
-            "components": [],
+            "components": [
+                "bounds_checking_function"
+            ],
             "third_party": []
         },
         "build": {
