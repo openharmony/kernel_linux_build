@@ -9,12 +9,13 @@
     "scripts": {},
     "dirs": {},
     "segment": {
-        "destPath": "kernel/linux/linux-5.10"
+        "destPath": "kernel/linux/build"
     },
     "component": {
         "name": "linux",
         "subsystem": "kernel",
         "syscap": [
+            "SystemCapability.Resourceschedule.QoS.Core"
         ],
         "features": [],
         "adapted_system_type": [
