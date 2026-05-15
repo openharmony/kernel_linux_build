@@ -37,6 +37,8 @@ KERNEL_CROSS_COMPILE :=
 ifeq ($(KERNEL_ARCH), arm)
     KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/arm/gcc-linaro-7.5.0-arm-linux-gnueabi/bin
     KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/arm-linux-gnueabi-
+    # Set LOADADDR for uImage generation (required for ARM)
+    KERNEL_LOADADDR := 0x40008000
 else ifeq ($(KERNEL_ARCH), arm64)
     KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/aarch64/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin
     KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/aarch64-linux-gnu-
@@ -69,6 +71,7 @@ endif
 
 KERNEL_MAKE := \
     PATH="$(BOOT_IMAGE_PATH):$$PATH" \
+    LOADADDR="$(KERNEL_LOADADDR)" \
     $(KERNEL_PREBUILT_MAKE)
 
 
@@ -80,6 +83,13 @@ SMALL_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME)_$(BUILD_TYPE).patch
 KERNEL_IMAGE_FILE := $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/boot/$(KERNEL_IMAGE)
 DEFCONFIG_FILE := $(DEVICE_NAME)_$(BUILD_TYPE)_defconfig
 UNIFIED_COLLECTION_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ucollection/apply_ucollection.sh
+CED_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/container_escape_detection/apply_ced.sh
+XPM_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/xpm/apply_xpm.sh
+DEC_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/dec/apply_dec.sh
+CODE_SIGN_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/code_sign/apply_code_sign.sh
+HIDEADDR_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/memory_security/apply_hideaddr.sh
+OHOE_HEADERS_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ohoe_headers/apply_ohoe_headers.sh
+WATCHDOG_PATCH_FILE := ${DEVICE_PATCH_DIR}/watchdog.patch
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
@@ -90,7 +100,7 @@ ifeq ($(DEVICE_NAME), hispark_phoenix)
 	$(hide) cd $(KERNEL_SRC_TMP_PATH)/drivers && rm -rf common && ln -s $(SDK_SOURCE_DIR)/common/drv ./common && cd -
 	$(hide) cd $(KERNEL_SRC_TMP_PATH)/drivers && rm -rf msp && ln -s $(SDK_SOURCE_DIR)/msp/drv ./msp && cd -
 else
-	$(hide) rm -rf $(KERNEL_SRC_TMP_PATH);mkdir -p $(KERNEL_SRC_TMP_PATH);cp -arfL $(KERNEL_SRC_PATH)/* $(KERNEL_SRC_TMP_PATH)/
+	$(hide) rm -rf $(KERNEL_SRC_TMP_PATH) $(KERNEL_OBJ_TMP_PATH);mkdir -p $(KERNEL_SRC_TMP_PATH) $(KERNEL_OBJ_TMP_PATH);cp -arfL $(KERNEL_SRC_PATH)/* $(KERNEL_SRC_TMP_PATH)/
 endif
 	$(hide) $(OHOS_BUILD_HOME)/drivers/hdf_core/adapter/khdf/linux/patch_hdf.sh $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(KERNEL_PATCH_PATH) $(DEVICE_NAME)
 
@@ -105,6 +115,31 @@ ifneq ($(findstring $(BUILD_TYPE), small),)
 endif
 ifeq ($(UNIFIED_COLLECTION_PATCH_FILE), $(wildcard $(UNIFIED_COLLECTION_PATCH_FILE)))
 	$(hide) $(UNIFIED_COLLECTION_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+ifeq ($(KERNEL_VERSION), linux-6.6)
+ifeq ($(CED_PATCH_FILE), $(wildcard $(CED_PATCH_FILE)))
+	$(hide) bash $(CED_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+ifeq ($(XPM_PATCH_FILE), $(wildcard $(XPM_PATCH_FILE)))
+	$(hide) bash $(XPM_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+ifeq ($(DEC_PATCH_FILE), $(wildcard $(DEC_PATCH_FILE)))
+	$(hide) bash $(DEC_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+ifeq ($(CODE_SIGN_PATCH_FILE), $(wildcard $(CODE_SIGN_PATCH_FILE)))
+	$(hide) bash $(CODE_SIGN_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+ifeq ($(HIDEADDR_PATCH_FILE), $(wildcard $(HIDEADDR_PATCH_FILE)))
+	$(hide) bash $(HIDEADDR_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+# Apply OpenHarmony specific headers (required for linux-6.6)
+ifeq ($(OHOE_HEADERS_FILE), $(wildcard $(OHOE_HEADERS_FILE)))
+	$(hide) bash $(OHOE_HEADERS_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+# Apply watchdog compatibility patch (required for qemu-arm-linux on linux-6.6)
+ifeq ($(WATCHDOG_PATCH_FILE), $(wildcard $(WATCHDOG_PATCH_FILE)))
+	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(WATCHDOG_PATCH_FILE)
+endif
 endif
 	$(hide) cp -rf $(KERNEL_CONFIG_PATH)/. $(KERNEL_SRC_TMP_PATH)/
 	$(hide) $(KERNEL_MAKE) -C $(KERNEL_SRC_TMP_PATH) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) distclean
