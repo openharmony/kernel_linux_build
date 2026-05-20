@@ -90,6 +90,7 @@ CODE_SIGN_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/code_sign
 HIDEADDR_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/memory_security/apply_hideaddr.sh
 OHOE_HEADERS_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ohoe_headers/apply_ohoe_headers.sh
 WATCHDOG_PATCH_FILE := ${DEVICE_PATCH_DIR}/watchdog.patch
+OH_HEADERS_PATCH_FILE := ${DEVICE_PATCH_DIR}/oh_headers.patch
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
@@ -132,9 +133,9 @@ endif
 ifeq ($(HIDEADDR_PATCH_FILE), $(wildcard $(HIDEADDR_PATCH_FILE)))
 	$(hide) bash $(HIDEADDR_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
 endif
-# Apply OpenHarmony specific headers (required for linux-6.6)
-ifeq ($(OHOE_HEADERS_FILE), $(wildcard $(OHOE_HEADERS_FILE)))
-	$(hide) bash $(OHOE_HEADERS_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+# Apply OpenHarmony specific headers patch (required for linux-6.6)
+ifeq ($(OH_HEADERS_PATCH_FILE), $(wildcard $(OH_HEADERS_PATCH_FILE)))
+	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(OH_HEADERS_PATCH_FILE)
 endif
 # Apply watchdog compatibility patch (required for qemu-arm-linux on linux-6.6)
 ifeq ($(WATCHDOG_PATCH_FILE), $(wildcard $(WATCHDOG_PATCH_FILE)))
