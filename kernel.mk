@@ -59,7 +59,7 @@ ifeq ($(DEVICE_NAME), hispark_phoenix)
 KERNEL_CROSS_COMPILE += CONFIG_MSP="y"
 endif
 
-ifeq ($(PRODUCT_NAME), qemu-arm-linux-min)
+ifeq ($(BUILD_TYPE), standard)
 KERNEL_LOADADDR := 0x40008000
 endif
 
