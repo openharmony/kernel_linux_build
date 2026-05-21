@@ -88,6 +88,7 @@ SMALL_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME)_$(BUILD_TYPE).patch
 KERNEL_IMAGE_FILE := $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/boot/$(KERNEL_IMAGE)
 DEFCONFIG_FILE := $(DEVICE_NAME)_$(BUILD_TYPE)_defconfig
 UNIFIED_COLLECTION_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ucollection/apply_ucollection.sh
+ifeq ($(BUILD_TYPE), standard)
 CED_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/container_escape_detection/apply_ced.sh
 XPM_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/xpm/apply_xpm.sh
 DEC_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/dec/apply_dec.sh
@@ -96,6 +97,7 @@ HIDEADDR_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/memory_sec
 OHOE_HEADERS_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ohoe_headers/apply_ohoe_headers.sh
 WATCHDOG_PATCH_FILE := ${DEVICE_PATCH_DIR}/watchdog.patch
 OH_HEADERS_PATCH_FILE := ${DEVICE_PATCH_DIR}/oh_headers.patch
+endif
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
