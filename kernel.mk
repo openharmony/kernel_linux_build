@@ -37,8 +37,6 @@ KERNEL_CROSS_COMPILE :=
 ifeq ($(KERNEL_ARCH), arm)
     KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/arm/gcc-linaro-7.5.0-arm-linux-gnueabi/bin
     KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/arm-linux-gnueabi-
-    # Set LOADADDR for uImage generation (required for ARM)
-    KERNEL_LOADADDR := 0x40008000
 else ifeq ($(KERNEL_ARCH), arm64)
     KERNEL_TARGET_TOOLCHAIN := $(PREBUILTS_GCC_DIR)/linux-x86/aarch64/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin
     KERNEL_TARGET_TOOLCHAIN_PREFIX := $(KERNEL_TARGET_TOOLCHAIN)/aarch64-linux-gnu-
@@ -61,6 +59,10 @@ ifeq ($(DEVICE_NAME), hispark_phoenix)
 KERNEL_CROSS_COMPILE += CONFIG_MSP="y"
 endif
 
+ifeq ($(BUILD_TYPE), standard)
+KERNEL_LOADADDR := 0x40008000
+endif
+
 ifneq ($(KERNEL_ARCH), loongarch)
 KERNEL_CROSS_COMPILE += CC="$(CLANG_CC)"
 endif
@@ -71,8 +73,11 @@ endif
 
 KERNEL_MAKE := \
     PATH="$(BOOT_IMAGE_PATH):$$PATH" \
-    LOADADDR="$(KERNEL_LOADADDR)" \
     $(KERNEL_PREBUILT_MAKE)
+
+ifdef KERNEL_LOADADDR
+KERNEL_MAKE += LOADADDR="$(KERNEL_LOADADDR)"
+endif
 
 
 ifneq ($(findstring $(BUILD_TYPE), small standard),)
@@ -83,6 +88,7 @@ SMALL_PATCH_FILE := $(DEVICE_PATCH_DIR)/$(DEVICE_NAME)_$(BUILD_TYPE).patch
 KERNEL_IMAGE_FILE := $(KERNEL_SRC_TMP_PATH)/arch/$(KERNEL_ARCH)/boot/$(KERNEL_IMAGE)
 DEFCONFIG_FILE := $(DEVICE_NAME)_$(BUILD_TYPE)_defconfig
 UNIFIED_COLLECTION_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ucollection/apply_ucollection.sh
+ifeq ($(BUILD_TYPE), standard)
 CED_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/container_escape_detection/apply_ced.sh
 XPM_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/xpm/apply_xpm.sh
 DEC_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/dec/apply_dec.sh
@@ -91,6 +97,7 @@ HIDEADDR_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/memory_sec
 OHOE_HEADERS_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ohoe_headers/apply_ohoe_headers.sh
 WATCHDOG_PATCH_FILE := ${DEVICE_PATCH_DIR}/watchdog.patch
 OH_HEADERS_PATCH_FILE := ${DEVICE_PATCH_DIR}/oh_headers.patch
+endif
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
