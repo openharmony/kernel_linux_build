@@ -91,6 +91,7 @@ HIDEADDR_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/memory_sec
 OHOE_HEADERS_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ohoe_headers/apply_ohoe_headers.sh
 WATCHDOG_PATCH_FILE := ${DEVICE_PATCH_DIR}/watchdog.patch
 OH_HEADERS_PATCH_FILE := ${DEVICE_PATCH_DIR}/oh_headers.patch
+KVM_FIX_PATCH_FILE := ${DEVICE_PATCH_DIR}/kvm_fix.patch
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
 
@@ -140,6 +141,10 @@ endif
 # Apply watchdog compatibility patch (required for qemu-arm-linux on linux-6.6)
 ifeq ($(WATCHDOG_PATCH_FILE), $(wildcard $(WATCHDOG_PATCH_FILE)))
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(WATCHDOG_PATCH_FILE)
+endif
+# Apply KVM fix patch (fixes kvm_iodevice_destructor visibility issue)
+ifeq ($(KVM_FIX_PATCH_FILE), $(wildcard $(KVM_FIX_PATCH_FILE)))
+	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(KVM_FIX_PATCH_FILE)
 endif
 endif
 	$(hide) cp -rf $(KERNEL_CONFIG_PATH)/. $(KERNEL_SRC_TMP_PATH)/
