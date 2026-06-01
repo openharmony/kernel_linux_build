@@ -98,6 +98,7 @@ OHOE_HEADERS_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ohoe_headers
 WATCHDOG_PATCH_FILE := ${DEVICE_PATCH_DIR}/watchdog.patch
 OH_HEADERS_PATCH_FILE := ${DEVICE_PATCH_DIR}/oh_headers.patch
 MD_STOP_WRITES_PATCH_FILE := ${DEVICE_PATCH_DIR}/md_stop_writes.patch
+KVM_FIX_PATCH_FILE := ${DEVICE_PATCH_DIR}/kvm_fix.patch
 endif
 
 export KBUILD_OUTPUT=$(KERNEL_OBJ_TMP_PATH)
@@ -152,6 +153,10 @@ endif
 # Apply MD stop writes fix patch (required for linux-6.6)
 ifeq ($(MD_STOP_WRITES_PATCH_FILE), $(wildcard $(MD_STOP_WRITES_PATCH_FILE)))
 	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(MD_STOP_WRITES_PATCH_FILE)
+endif
+# Apply KVM fix patch (fixes kvm_iodevice_destructor visibility issue)
+ifeq ($(KVM_FIX_PATCH_FILE), $(wildcard $(KVM_FIX_PATCH_FILE)))
+	$(hide) cd $(KERNEL_SRC_TMP_PATH) && patch -p1 < $(KVM_FIX_PATCH_FILE)
 endif
 endif
 	$(hide) cp -rf $(KERNEL_CONFIG_PATH)/. $(KERNEL_SRC_TMP_PATH)/
