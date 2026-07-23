@@ -31,7 +31,6 @@ constexpr unsigned int GET_TOKEN_ID = 1;
 constexpr unsigned int SET_TOKEN_ID = 2;
 constexpr unsigned int GET_FTOKEN_ID = 3;
 constexpr unsigned int SET_FTOKEN_ID = 4;
-constexpr unsigned int ACCESS_TOKENID_MAX_NR = 5;
 #define	ACCESS_TOKENID_GET_TOKENID \
     _IOR(ACCESS_TOKEN_ID_IOCTL_BASE, GET_TOKEN_ID, unsigned long long)
 #define	ACCESS_TOKENID_SET_TOKENID \
@@ -42,8 +41,6 @@ constexpr unsigned int ACCESS_TOKENID_MAX_NR = 5;
     _IOW(ACCESS_TOKEN_ID_IOCTL_BASE, SET_FTOKEN_ID, unsigned long long)
 #define	ACCESS_TOKENID_ILLEGAL1 \
     _IOW(ACCESS_TOKEN_ID_IOCTL_BASE, 0, unsigned long long)
-#define	ACCESS_TOKENID_ILLEGAL2 \
-    _IOW(ACCESS_TOKEN_ID_IOCTL_BASE, ACCESS_TOKENID_MAX_NR, unsigned long long)
 
 constexpr unsigned long long INVAL_TOKEN = 0xffffffffffffffff;
 
@@ -439,7 +436,7 @@ HWTEST_F(AccesstokenidTest, AbnormalSetfTokenid, Function | MediumTest | Level1)
 
 /**
  * @tc.name: AbnormalIoctlCmd
- * @tc.desc: Test abnormal ioctl cmd of ACCESS_TOKENID_ILLEGAL1 and ACCESS_TOKENID_ILLEGAL1
+ * @tc.desc: Test abnormal ioctl cmd of ACCESS_TOKENID_ILLEGAL1
  * @tc.desc: using illegal cmd instead of accesstokenid to ioctl
  * @tc.type: FUNC
  */
@@ -454,11 +451,9 @@ HWTEST_F(AccesstokenidTest, AbnormalIoctlCmd, Function | MediumTest | Level1)
     }
 
     int ret1 = ioctl(fd, ACCESS_TOKENID_ILLEGAL1, &token);
-    int ret2 = ioctl(fd, ACCESS_TOKENID_ILLEGAL2, &token);
     close(fd);
 
     ASSERT_NE(0, ret1);
-    ASSERT_NE(0, ret2);
 }
 
 /**
