@@ -32,7 +32,7 @@ using namespace testing::ext;
 using namespace std;
 
 constexpr size_t MAX_LENGTH = 100;
-const char RTG_SCHED_IPC_MAGIC = 0xAB;
+const unsigned char RTG_SCHED_IPC_MAGIC = 0xAB;
 const int RTG_ERR = -1;
 const int RTG_SUCC = 0;
 const int MAX_TID_NUM = 5;

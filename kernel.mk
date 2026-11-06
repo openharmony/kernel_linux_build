@@ -94,6 +94,9 @@ XPM_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/xpm/apply_xpm.s
 DEC_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/dec/apply_dec.sh
 CODE_SIGN_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/code_sign/apply_code_sign.sh
 HIDEADDR_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/memory_security/apply_hideaddr.sh
+QOS_AUTH_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/qos_auth/apply_qos_auth.sh
+NEWIP_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/newip/apply_newip.sh
+TZDRIVER_PATCH_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/tzdriver/apply_tzdriver.sh
 OHOE_HEADERS_FILE := ${OHOS_BUILD_HOME}/kernel/linux/common_modules/ohoe_headers/apply_ohoe_headers.sh
 WATCHDOG_PATCH_FILE := ${DEVICE_PATCH_DIR}/watchdog.patch
 OH_HEADERS_PATCH_FILE := ${DEVICE_PATCH_DIR}/oh_headers.patch
@@ -141,6 +144,15 @@ ifeq ($(CODE_SIGN_PATCH_FILE), $(wildcard $(CODE_SIGN_PATCH_FILE)))
 endif
 ifeq ($(HIDEADDR_PATCH_FILE), $(wildcard $(HIDEADDR_PATCH_FILE)))
 	$(hide) bash $(HIDEADDR_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+ifeq ($(QOS_AUTH_PATCH_FILE), $(wildcard $(QOS_AUTH_PATCH_FILE)))
+	$(hide) bash $(QOS_AUTH_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+ifeq ($(NEWIP_PATCH_FILE), $(wildcard $(NEWIP_PATCH_FILE)))
+	$(hide) bash $(NEWIP_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
+endif
+ifeq ($(TZDRIVER_PATCH_FILE), $(wildcard $(TZDRIVER_PATCH_FILE)))
+	$(hide) bash $(TZDRIVER_PATCH_FILE) $(OHOS_BUILD_HOME) $(KERNEL_SRC_TMP_PATH) $(DEVICE_NAME) $(KERNEL_VERSION)
 endif
 # Apply OpenHarmony specific headers patch (required for linux-6.6)
 ifeq ($(OH_HEADERS_PATCH_FILE), $(wildcard $(OH_HEADERS_PATCH_FILE)))
